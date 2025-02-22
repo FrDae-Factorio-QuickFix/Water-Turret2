@@ -74,7 +74,9 @@ local extinguisherfluid = {
   --~ icon_size = 128,
   default_temperature = 25,
   max_temperature = 100,
-  heat_capacity = "1KJ",
+
+  heat_capacity = "1kJ",
+
   -- Need to detach base_color from WT.fire_ex_fluid_tint, if it's just a reference,
   -- the icon will get transparency as well!
   base_color = table.deepcopy(WT.fire_ex_fluid_tint),

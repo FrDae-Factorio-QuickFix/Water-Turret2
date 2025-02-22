@@ -93,8 +93,8 @@ local recipe_data = {
     {"pipe", 10},
     {"offshore-pump", 1}
   },
-  ["result"] = WT.water_turret_name,
-  ["result_count"] = 1,
+
+  ["results"] = {{type = "item", name = WT.water_turret_name, amount = 1}},
   ["energy_required"] = waterrecipe.energy_required
 }
 
@@ -132,8 +132,8 @@ recipe_data = {
     {"advanced-circuit", 5},
     {type = "fluid", name = "lubricant", amount = 50},
   },
-  ["result"] = WT.extinguisher_turret_name,
-  ["result_count"] = 1,
+
+  ["results"] = {{type = "item", name = WT.extinguisher_turret_name, amount = 1}},
   ["energy_required"] = extinguisherrecipe.energy_required * 3
 }
 

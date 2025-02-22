@@ -127,7 +127,9 @@ local burnt_patch = {
   icon_size = 64,
   flags = {"placeable-neutral", "not-on-map", "placeable-off-grid"},
   collision_box = {{-1.5, -1.5}, {1.5, 1.5}},
-  collision_mask = {"doodad-layer", "not-colliding-with-itself"},
+
+  collision_mask = {layers = {doodad = true}, "not-colliding-with-itself"},
+
   selection_box = {{-1, -1}, {1, 1}},
   selectable_in_game = false,
   time_before_removed = 60 * 60 * 3, -- 3 minutes
@@ -220,11 +222,12 @@ fire_dummy.flags = {
     "not-on-map",
     "not-blueprintable",
     "not-deconstructable",
-    "hidden",
     "not-flammable",
     "no-copy-paste",
     "not-selectable-in-game"
 }
+
+fire_dummy.hidden = true
 fire_dummy.follows_player = false
 fire_dummy.icon = WT.debug_in_log and MOD_PIX .. "/red_dot.png" or MOD_PIX .. "/blank.png"
 fire_dummy.icon_mipmaps = 1
@@ -358,7 +361,7 @@ waterentity.shoot_in_prepare_state = false
 waterentity.attack_parameters = {
   type = "stream",
   cooldown = 10,
-  range = 50, --30
+  --range = 50, --30
   range = WT.water_turret_range, --30
   min_range = 6,
 
@@ -380,8 +383,9 @@ waterentity.attack_parameters = {
     west = {-0.4,-1.2}
   },
   gun_barrel_length = 0.4,
+
+  ammo_category = WT.ammo_category,
   ammo_type = {
-    category = WT.ammo_category,
     action = {
       type = "direct",
       action_delivery = {
@@ -684,16 +688,17 @@ data:extend({extinguisherwaterentity, extinguisherwaterstream})
 
 ------------------------------------------------------------------------------------
 -- Color remnants
-local function color_remnants(entity, tint)
+
+--[[local function color_remnants(entity, tint)
+
   local layer = table.deepcopy(data.raw.corpse["flamethrower-turret-remnants"].animation.layers[1])
 
   layer.filename = MOD_PIX .. "turret-gun-remnants-raw.png"
   layer.tint = tint
 
-  layer.hr_version.filename = MOD_PIX .. "hr-turret-gun-remnants-raw.png"
-  layer.hr_version.tint = tint
 
-  table.insert(entity.animation.layers, 2, layer)
+
+  table.insert(entity.animation.layers, 2, layer)--]]--[[
 end
 --~ log("WT.water_turret_tint: " .. serpent.block(WT.water_turret_tint))
 color_remnants(data.raw.corpse[WT.water_turret_name .. "-remnants"], WT.water_turret_tint)
@@ -714,8 +719,11 @@ local function color_layer(layers, image, tint)
 end
 
 
+--]]
 ------------------------------------------------------------------------------------
 --Color turret base
+--[[
+
 local function color_base(turret, tint)
 
   for d, direction in ipairs({"north", "east", "south", "west"}) do
@@ -723,17 +731,21 @@ local function color_base(turret, tint)
                   "turret-base-" .. direction .. "-raw.png", tint)
   end
 end
-color_base(data.raw[WT.turret_type][WT.water_turret_name], WT.water_turret_tint)
-color_base(data.raw[WT.turret_type][WT.steam_turret_name], WT.water_turret_tint)
-color_base(data.raw[WT.turret_type][WT.extinguisher_turret_name], WT.extinguisher_turret_tint)
-color_base(data.raw[WT.turret_type][WT.extinguisher_turret_water_name], WT.extinguisher_turret_tint)
+
+--color_base(data.raw[WT.turret_type][WT.water_turret_name], WT.water_turret_tint)
+--color_base(data.raw[WT.turret_type][WT.steam_turret_name], WT.water_turret_tint)
+--color_base(data.raw[WT.turret_type][WT.extinguisher_turret_name], WT.extinguisher_turret_tint)
+---color_base(data.raw[WT.turret_type][WT.extinguisher_turret_water_name], WT.extinguisher_turret_tint)
+
 --~ WT.exchange_images({ "north", "east", "south", "west" },
                     --~ "extinguisher-turret-base-%NAME%.png",
                     --~ data.raw[WT.turret_type][WT.extinguisher_turret_name].base_picture)
 
 
 ------------------------------------------------------------------------------------
--- Color rotatable gun
+-- Color rotatable gun 
+--[[
+
 local function color_gun(turret, tint)
   local function color(layer, image, tint)
     layer.filename = MOD_PIX .. image
@@ -765,3 +777,6 @@ color_gun(data.raw[WT.turret_type][WT.water_turret_name], WT.water_turret_tint)
 color_gun(data.raw[WT.turret_type][WT.steam_turret_name], WT.water_turret_tint)
 color_gun(data.raw[WT.turret_type][WT.extinguisher_turret_name], WT.extinguisher_turret_tint)
 color_gun(data.raw[WT.turret_type][WT.extinguisher_turret_water_name], WT.extinguisher_turret_tint)
+
+--]]
+

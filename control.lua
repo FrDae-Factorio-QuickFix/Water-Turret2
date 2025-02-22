@@ -1215,10 +1215,12 @@ end)
 
 ------------------------------------------------------------------------------------
 -- Fire has been destroyed
-script.on_event(defines.events.on_entity_destroyed, function(event)
+
+script.on_event(defines.events.on_entity_died, function(event)
   WT.dprint("Entered event script for events.on_entity_destroyed(%s).", { event }, "line")
 
-  local id = event.registration_number
+  local id = event.entity
+
 
   if id and global.fires[id] then
     WT.dprint("Removing fire %s from global list!", { id })
@@ -1388,7 +1390,9 @@ script.on_event(defines.events.on_tick, on_tick)
 --                    FIND LOCAL VARIABLES THAT ARE USED GLOBALLY                 --
 --                              (Thanks to eradicator!)                           --
 ------------------------------------------------------------------------------------
-setmetatable(_ENV,{
+
+--[[setmetatable(_ENV,{
+
   __newindex = function (self,key,value) --locked_global_write
     error('\n\n[ER Global Lock] Forbidden global *write*:\n'
       .. serpent.line{key = key or '<nil>',value = value or '<nil>'} .. '\n')
@@ -1400,3 +1404,6 @@ setmetatable(_ENV,{
     end
   end ,
 })
+
+--]]
+

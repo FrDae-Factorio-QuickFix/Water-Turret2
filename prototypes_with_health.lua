@@ -141,7 +141,9 @@ prototypes_with_health.immune = {
   "constant-combinator",
   "construction-robot",
   "container",
-  "curved-rail",
+
+  "curved-rail-a",
+  "curved-rail-b",
   "decider-combinator",
   "electric-energy-interface",
   "electric-pole",
@@ -170,7 +172,6 @@ prototypes_with_health.immune = {
   "offshore-pump",
   "pipe",
   "pipe-to-ground",
-  "player-port",
   "power-switch",
   "programmable-speaker",
   "pump",
