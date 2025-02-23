@@ -1,4 +1,4 @@
-local WT = require('__WaterTurret__/common')("WaterTurret")
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
 
 local MOD_PIX = WT.mod_root .. "graphics/icons/"
 
@@ -17,7 +17,7 @@ wateritem.icons = {
   {icon = MOD_PIX .. "turret-icon-raw.png", tint = WT.water_turret_tint}
 }
 wateritem.icon_size = 64
-wateritem.icon_mipmaps = 0
+--wateritem.icon_mipmaps = 0
 
 local extinguisheritem = util.table.deepcopy(data.raw["item"]["flamethrower-turret"])
 extinguisheritem.name = WT.extinguisher_turret_name
@@ -54,20 +54,24 @@ local extinguisherfluid = {
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-icon-turret-bg.png",
       icon_size = 128,
+      scale = 0.5
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-icon-turret.png",
       icon_size = 128,
       tint = WT.extinguisher_turret_tint,
+      scale = 0.5
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-icon-fluid-bg.png",
       icon_size = 128,
+      scale = 0.5
       --~ tint = WT.fire_ex_fluid_tint,
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-icon-fluid.png",
       icon_size = 128,
+      scale = 0.5,
       tint = WT.fire_ex_fluid_tint,
     },
   },
@@ -77,6 +81,7 @@ local extinguisherfluid = {
 
   heat_capacity = "1kJ",
 
+  subgroup = "fluid",
   -- Need to detach base_color from WT.fire_ex_fluid_tint, if it's just a reference,
   -- the icon will get transparency as well!
   base_color = table.deepcopy(WT.fire_ex_fluid_tint),

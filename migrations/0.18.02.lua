@@ -1,18 +1,18 @@
-local WT = require('__WaterTurret__/common')("WaterTurret")
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
 
 ------------------------------------------------------------------------------------
 -- Register all existing water turrets
 
 WT.dprint("Entered migration script \"0.18.02.lua\"")
 
-WT.show("global.WT_turrets", global.WT_turrets)
-if not global.WT_turrets or table_size(global.WT_turrets) == 0 then
+WT.show("storage.WT_turrets", storage.WT_turrets)
+if not storage.WT_turrets or table_size(storage.WT_turrets) == 0 then
 
   ------------------------------------------------------------------------------------
   --                              Register all turrets                              --
   ------------------------------------------------------------------------------------
-  global = global or {}
-  global.WT_turrets = global.WT_turrets or {}
+  storage = storage or {}
+  storage.WT_turrets = storage.WT_turrets or {}
 
   local turrets = {}
   local tick = game.tick
@@ -30,7 +30,7 @@ if not global.WT_turrets or table_size(global.WT_turrets) == 0 then
 
       -- Register turrets
       for t, turret in pairs(turrets) do
-        global.WT_turrets[turret.unit_number] = {
+        storage.WT_turrets[turret.unit_number] = {
           -- Store the entity.
           ["entity"] = turret,
           -- Calculate the rectangular area (2*range x range) in the direction the
@@ -49,29 +49,29 @@ if not global.WT_turrets or table_size(global.WT_turrets) == 0 then
       WT.dprint("Done. (%s)", { ent })
     end
   end
-WT.show("global", global)
+WT.show("storage", storage)
 end
 
 -- Check that turrets can use the fluid they're hooked up to, exchange them otherwise.
-for id, turret in pairs(global.WT_turrets) do
+for id, turret in pairs(storage.WT_turrets) do
   local new_id = WT.swap_turrets(id)
 
-  if new_id and global.WT_turrets[new_id].entity.valid then
+  if new_id and storage.WT_turrets[new_id].entity.valid then
     if new_id == id then
       WT.dprint("Kept %s.", { WT.print_name_id(turret.entity) })
     else
       WT.dprint("Replaced turret %s with %s.", {
-                id, WT.print_name_id(global.WT_turrets[new_id].entity)
+                id, WT.print_name_id(storage.WT_turrets[new_id].entity)
       })
 
       -- Remove old turret from list
-      global.WT_turrets[id] = nil
+      storage.WT_turrets[id] = nil
     end
   end
 end
 
 WT.dprint("Swapped turrets. Checking ticks!")
-for id, turret in pairs(global.WT_turrets) do
+for id, turret in pairs(storage.WT_turrets) do
   if turret.entity and turret.entity.valid then
     WT.dprint("ID %s: %s acting on tick %g", { id, WT.print_name(turret.entity), turret.tick })
   else

@@ -1,7 +1,7 @@
-local WT = require('__WaterTurret__/common')("WaterTurret")
-local prototypes_with_health = require('__WaterTurret__/prototypes_with_health')
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
+local prototypes_with_health = require('__WaterTurret-revived__/prototypes_with_health')
 
-local acid = require('__WaterTurret__/ignore_fires')
+local acid = require('__WaterTurret-revived__/ignore_fires')
 
 ------------------------------------------------------------------------------------
 --                               Utility functions                                --

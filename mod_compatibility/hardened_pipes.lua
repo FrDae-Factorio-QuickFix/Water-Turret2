@@ -1,4 +1,4 @@
-local WT = require('__WaterTurret__/common')("WaterTurret")
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
 local MOD_PIX = WT.mod_root .. "graphics/"
 
 local mod_name = "\"Hardened pipes\""
@@ -139,11 +139,8 @@ if mods["hardened_pipes"] and WT.hardened_pipes then
   for d, direction in ipairs({"north", "east", "south", "west"}) do
     layer = data.raw[WT.turret_type][WT.extinguisher_turret_name].base_picture[direction].layers[1]
 
-    layer.filename = MOD_PIX .. "turret-base-pipes-" .. direction .. ".png"
+    layer.filename = MOD_PIX .. "hr-turret-base-pipes-" .. direction .. ".png"
 
-    if layer.hr_version then
-        layer.hr_version.filename = MOD_PIX .. "hr-turret-base-pipes-" .. direction .. ".png"
-    end
   end
   WT.dprint("%s %s has been found. Exchanged graphics of %s!",
             {mod_name, mods["hardened_pipes"], WT.extinguisher_turret_name})

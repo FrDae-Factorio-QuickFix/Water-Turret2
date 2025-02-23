@@ -1,6 +1,9 @@
+
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 
 *.code-workspace
 *.zip
+/WaterTurret-revived_*
+

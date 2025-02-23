@@ -1,4 +1,4 @@
-local WT = require('__WaterTurret__/common')("WaterTurret")
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
 
 local MOD_PIX = WT.mod_root .. "graphics/"
 local ICONS = MOD_PIX .. "icons/"
@@ -689,11 +689,11 @@ data:extend({extinguisherwaterentity, extinguisherwaterstream})
 ------------------------------------------------------------------------------------
 -- Color remnants
 
---[[local function color_remnants(entity, tint)
+local function color_remnants(entity, tint)
 
   local layer = table.deepcopy(data.raw.corpse["flamethrower-turret-remnants"].animation.layers[1])
 
-  layer.filename = MOD_PIX .. "turret-gun-remnants-raw.png"
+  layer.filename = MOD_PIX .. "hr-turret-gun-remnants-raw.png"
   layer.tint = tint
 
 
@@ -710,11 +710,6 @@ local function color_layer(layers, image, tint)
   new_layer.filename = MOD_PIX .. image
   new_layer.tint = tint
   new_layer.apply_runtime_tint = false
-  if new_layer.hr_version then
-    new_layer.hr_version.filename = MOD_PIX .. "hr-" .. image
-    new_layer.hr_version.tint = tint
-    new_layer.hr_version.apply_runtime_tint = false
-  end
   table.insert(layers, 2, new_layer)
 end
 
@@ -722,21 +717,20 @@ end
 --]]
 ------------------------------------------------------------------------------------
 --Color turret base
---[[
+
 
 local function color_base(turret, tint)
 
   for d, direction in ipairs({"north", "east", "south", "west"}) do
-    color_layer(turret.base_picture[direction].layers,
-                  "turret-base-" .. direction .. "-raw.png", tint)
+    color_layer(turret.graphics_set.base_visualisation.animation[direction].layers,
+                  "hr-turret-base-" .. direction .. "-raw.png", tint)
   end
 end
 
---color_base(data.raw[WT.turret_type][WT.water_turret_name], WT.water_turret_tint)
---color_base(data.raw[WT.turret_type][WT.steam_turret_name], WT.water_turret_tint)
---color_base(data.raw[WT.turret_type][WT.extinguisher_turret_name], WT.extinguisher_turret_tint)
----color_base(data.raw[WT.turret_type][WT.extinguisher_turret_water_name], WT.extinguisher_turret_tint)
-
+color_base(data.raw[WT.turret_type][WT.water_turret_name], WT.water_turret_tint)
+color_base(data.raw[WT.turret_type][WT.steam_turret_name], WT.water_turret_tint)
+color_base(data.raw[WT.turret_type][WT.extinguisher_turret_name], WT.extinguisher_turret_tint)
+color_base(data.raw[WT.turret_type][WT.extinguisher_turret_water_name], WT.extinguisher_turret_tint)
 --~ WT.exchange_images({ "north", "east", "south", "west" },
                     --~ "extinguisher-turret-base-%NAME%.png",
                     --~ data.raw[WT.turret_type][WT.extinguisher_turret_name].base_picture)
@@ -744,31 +738,27 @@ end
 
 ------------------------------------------------------------------------------------
 -- Color rotatable gun 
---[[
+
 
 local function color_gun(turret, tint)
   local function color(layer, image, tint)
     layer.filename = MOD_PIX .. image
     layer.tint = tint
     layer.apply_runtime_tint = false
-    if layer.hr_version then
-      layer.hr_version.filename = MOD_PIX .. "hr-" .. image
-      layer.hr_version.tint = tint
-      layer.hr_version.apply_runtime_tint = false
-    end
+
   end
 
   for d, direction in ipairs({"north", "east", "south", "west"}) do
     for a, animation in ipairs({
       "folded_animation", "preparing_animation", "folding_animation",
     }) do
-      color(turret[animation][direction].layers[1], "turret-gun-extension-raw.png", tint)
+      color(turret[animation][direction].layers[1], "hr-turret-gun-extension-raw.png", tint)
     end
 
     for a, animation in ipairs({
       "prepared_animation", "attacking_animation", "ending_attack_animation"
     }) do
-      color(turret[animation][direction].layers[1], "turret-gun-raw.png", tint)
+      color(turret[animation][direction].layers[1], "hr-turret-gun-raw.png", tint)
     end
   end
 end
@@ -777,6 +767,4 @@ color_gun(data.raw[WT.turret_type][WT.water_turret_name], WT.water_turret_tint)
 color_gun(data.raw[WT.turret_type][WT.steam_turret_name], WT.water_turret_tint)
 color_gun(data.raw[WT.turret_type][WT.extinguisher_turret_name], WT.extinguisher_turret_tint)
 color_gun(data.raw[WT.turret_type][WT.extinguisher_turret_water_name], WT.extinguisher_turret_tint)
-
---]]
 
