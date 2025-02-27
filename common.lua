@@ -1,4 +1,4 @@
-local prototypes = require("prototypes_with_health")
+local prototypes_wh = require("prototypes_with_health")
 local math2d = require("math2d")
 local util = require("util")
 
@@ -244,8 +244,8 @@ return function(mod_name)
   common.burnt_patch = "WT-fake-fire-burnt-patch"
 
    -- This are functions that return an array!
-  common.enemies = prototypes.attack
-  common.enemy_healing = prototypes.healing
+  common.enemies = prototypes_wh.attack
+  common.enemy_healing = prototypes_wh.healing
   --~ common.get_enemy_forces = prototypes.get_enemy_forces
 --~ log("enemy_healing: " .. serpent.block(common.enemy_healing))
   -- Searchable list of acid names
@@ -737,7 +737,6 @@ common.show("type(common.get_enemy_forces)", type(common.get_enemy_forces(turret
     local ret = false
 
     local area = turret.area
-
     -- Precalculate the tangens of the turrets' blind angle just once -- it's a constant
     -- that won't change until Factorio is restarted!
     if not common.water_turret_blind_angle_tan then
