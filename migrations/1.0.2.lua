@@ -82,7 +82,7 @@ log("Removed " .. tostring(cnt or 0) .. " dummies.")
   -- Search for fires on all surfaces
   fires = surface.find_entities_filtered({ type = "fire" }) or {}
 
-  for f, fire in ipairs(fires) do
+  --[[for f, fire in ipairs(fires) do
     --fire_id = script.register_on_entity_destroyed(fire)
 
     dummy = surface.create_entity({
@@ -101,7 +101,7 @@ log("dummy position: " .. serpent.block(dummy.position))
         fire_id = fire_id
       })
     end
-  end
+  end--]]
 
   --~ log("storage.fire_dummies: " .. serpent.block(storage.fire_dummies))
   --~ log("storage.fires: " .. serpent.block(storage.fires))
