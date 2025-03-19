@@ -49,30 +49,30 @@ local function make_recipe_icon(item)
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-recipe-turret-bg.png",
       icon_size = 128,
-      scale = 0.5
+      scale = 0.25
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-recipe-turret.png",
       tint = WT.extinguisher_turret_tint,
       icon_size = 128,
-      scale = 0.5
+      scale = 0.25
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-recipe-fluid-bg.png",
       icon_size = 128,
-      scale = 0.5
+      scale = 0.25
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-recipe-fluid.png",
       tint = WT.fire_ex_fluid_tint,
       icon_size = 128,
-      scale = 0.5
+      scale = 0.25
 
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-recipe-ingredient-" .. item .. ".png",
       icon_size = 128,
-      scale = 0.5
+      scale = 0.25
     },
   }
 end
@@ -187,7 +187,6 @@ recipe = {
   name = WT.fire_ex_fluid .. "-oil",
   --~ localised_description = {"recipe-description.WT-fire_ex_fluid"},
   icons = make_recipe_icon("oil"),
-  icon_size = 128,
   category = "chemistry",
   subgroup = "fluid",
   ingredients = {},

@@ -18,7 +18,9 @@ return function(mod_name)
     return list
   end
 
+
   local function set_color(turret)
+    ---@diagnostic disable-next-line type-mismatch
     local color = settings.startup[turret .. "-color"].value
     -- Normalize hexadecimal numbers by removing prefix!
     if string.match(color, "^%s*#%x+%s*$") then
@@ -28,6 +30,7 @@ return function(mod_name)
 
     -- Hex-code color
     if string.match(color, "^([%x]+)$") and string.len(color) == 6 then
+
       color = util.color(color)
 
     -- RGB triples
