@@ -10,6 +10,7 @@ Date: 2025-03-19
     - add image for descriptions
     - change version numbers to fit with the pi-c system
     - update licence.md
+    - add hardened_pipes in dependncy (temp)
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.4
 Date: 2025-02-27
