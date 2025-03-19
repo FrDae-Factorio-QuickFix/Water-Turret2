@@ -1,4 +1,5 @@
 {
+
     "Lua.diagnostics.globals": [
         "game",
         "settings",
@@ -23,5 +24,18 @@
     "Lua.diagnostics.disable": [
         "lowercase-global"
     ],
-    "Lua.runtime.version": "Lua 5.2"
+    "Lua.runtime.version": "Lua 5.2",
+
+    "factorio.versions": [
+        {
+            "name": "Main",
+            "factorioPath": "e:\\SteamLibrary\\steamapps\\common\\Factorio\\bin\\x64\\factorio.exe",
+            "active": true
+        }
+    ],
+    "Lua.workspace.userThirdParty": [
+        "c:\\Users\\Lily\\AppData\\Roaming\\Code\\User\\workspaceStorage\\0c4d6a39e9cf079d05b1b917a29beb83\\justarandomgeek.factoriomod-debug\\sumneko-3rd"
+    ],
+    "Lua.workspace.checkThirdParty": "ApplyInMemory"
+
 }

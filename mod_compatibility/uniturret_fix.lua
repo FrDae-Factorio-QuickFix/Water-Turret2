@@ -4,7 +4,7 @@
 --    dummies. So, remove the dummies from the ignore list of Uniturret's water   --
 --    turrets and add them to their attack_target_mask instead!                   --
 ------------------------------------------------------------------------------------
-local WT = require('__WaterTurret__/common')("WaterTurret")
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
 WT.dprint("Checking for \"uniturret_Fix\".")
 
 if mods["uniturret_Fix"] then

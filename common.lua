@@ -1,4 +1,4 @@
-local prototypes = require("prototypes_with_health")
+local prototypes_wh = require("prototypes_with_health")
 local math2d = require("math2d")
 local util = require("util")
 
@@ -68,7 +68,7 @@ return function(mod_name)
 --~ prototypes_with_health.get_enemy_forces = function(turret)
   --~ log(string.format("End of function get_enemy_forces(%s).", turret))
 
-  --~ if not (turret and turret.valid and global.WT_turrets[turret.unit_number]) then
+  --~ if not (turret and turret.valid and storage.WT_turrets[turret.unit_number]) then
     --~ error(string.format("%s (%s) is not a valid turret!",
                           --~ turret and turret.name or "nil",
                           --~ turret and turret.unit_number or turret.index or "nil"))
@@ -244,8 +244,8 @@ return function(mod_name)
   common.burnt_patch = "WT-fake-fire-burnt-patch"
 
    -- This are functions that return an array!
-  common.enemies = prototypes.attack
-  common.enemy_healing = prototypes.healing
+  common.enemies = prototypes_wh.attack
+  common.enemy_healing = prototypes_wh.healing
   --~ common.get_enemy_forces = prototypes.get_enemy_forces
 --~ log("enemy_healing: " .. serpent.block(common.enemy_healing))
   -- Searchable list of acid names
@@ -538,12 +538,12 @@ common.show("y", y)
     -- We searched a radius of max range, so we only need to check for min_range here!
     --~ local ret = (distance >= global.WT_turrets[turret.unit_number].min_range and
                   --~ distance <= global.WT_turrets[turret.unit_number].range)
-    local ret = (distance > global.WT_turrets[turret.unit_number].min_range and
-                  distance < global.WT_turrets[turret.unit_number].range)
+    local ret = (distance > storage.WT_turrets[turret.unit_number].min_range and
+                  distance < storage.WT_turrets[turret.unit_number].range)
     common.dprint("End of function is_in_range(%s, %s). (Distance: %s. Return: %s)",
                   { common.print_name(turret), target, distance, ret })
-    --~ return (distance >= global.WT_turrets[turret.unit_number].min_range and
-              --~ distance <= global.WT_turrets[turret.unit_number].range)
+    --~ return (distance >= storage.WT_turrets[turret.unit_number].min_range and
+              --~ distance <= storage.WT_turrets[turret.unit_number].range)
     return ret
   end
 
@@ -587,7 +587,7 @@ common.show("y", y)
 
   ------------------------------------------------------------------------------------
   -- Make list of forces that are enemy of the turret force and store it with the
-  -- turret data in the global table.
+  -- turret data in the storage table.
   common.get_enemy_forces = function(check_force)
     common.dprint("Entered function get_enemy_forces(%s).", {check_force})
 
@@ -642,7 +642,7 @@ common.show("type(common.get_enemy_forces)", type(common.get_enemy_forces(turret
       if not (force and common.force_relations[force]) then
         common.force_relations[force] = common.get_enemy_forces(turret)
       end
-      global.WT_turrets[turret.unit_number].enemy_forces = common.force_relations[force]
+      storage.WT_turrets[turret.unit_number].enemy_forces = common.force_relations[force]
     end
 
     common.dprint("End of function get_turret_enemies(%s).", { common.print_name(turret) })
@@ -668,11 +668,11 @@ common.show("type(common.get_enemy_forces)", type(common.get_enemy_forces(turret
     --~ common.show("y", y)
     --~ common.show("direction", turret.direction)
     local left_top, right_bottom
-    local range = global.WT_turrets[turret.unit_number] and
-                    global.WT_turrets[turret.unit_number].range
+    local range = storage.WT_turrets[turret.unit_number] and
+                    storage.WT_turrets[turret.unit_number].range
     if not range then
       range = turret.prototype.attack_parameters.range
-      global.WT_turrets[turret.unit_number].range = range
+      storage.WT_turrets[turret.unit_number].range = range
     end
 
     local direction = direction or turret.direction
@@ -701,11 +701,11 @@ common.show("type(common.get_enemy_forces)", type(common.get_enemy_forces(turret
     end
 
     common.dprint("End of function get_turret_area(%s).", {common.print_name_id(turret)})
-    --~ if global.WT_turrets[turret.unit_number] then
-      --~ if global.WT_turrets[turret.unit_number].render_area then
-        --~ rendering.destroy(global.WT_turrets[turret.unit_number].render_area)
+    --~ if storage.WT_turrets[turret.unit_number] then
+      --~ if storage.WT_turrets[turret.unit_number].render_area then
+        --~ rendering.destroy(storage.WT_turrets[turret.unit_number].render_area)
       --~ end
-      --~ global.WT_turrets[turret.unit_number].render_area = rendering.draw_rectangle{left_top = left_top, right_bottom = right_bottom, color = {r = 1, g = 1, b = 1, a = .1}, filled = true, surface = turret.surface}
+      --~ storage.WT_turrets[turret.unit_number].render_area = rendering.draw_rectangle{left_top = left_top, right_bottom = right_bottom, color = {r = 1, g = 1, b = 1, a = .1}, filled = true, surface = turret.surface}
       --~ rendering.draw_circle{color= {r = 0.1, g = 0.1, b = 0, a = 0.1}, radius = range, filled = true, target = turret.position, surface = turret.surface}
     --~ end
 
@@ -720,7 +720,7 @@ common.show("type(common.get_enemy_forces)", type(common.get_enemy_forces(turret
     common.dprint("Entered function can_shoot(%s,%s) on tick %g.",
                   { common.print_name_id(turret), position or "nil", game.tick })
 
-    turret = (turret and turret.valid and global.WT_turrets[turret.unit_number])
+    turret = (turret and turret.valid and storage.WT_turrets[turret.unit_number])
     if not turret then
       error("Wrong argument -- not a valid turret: " .. serpent.block(turret))
     elseif not (position and (position.x or position[1]) and
@@ -737,12 +737,11 @@ common.show("type(common.get_enemy_forces)", type(common.get_enemy_forces(turret
     local ret = false
 
     local area = turret.area
-
     -- Precalculate the tangens of the turrets' blind angle just once -- it's a constant
     -- that won't change until Factorio is restarted!
     if not common.water_turret_blind_angle_tan then
       local angle
-      local proto = game.get_filtered_entity_prototypes({
+      local proto = prototypes.get_entity_filtered({
         { filter = "type", type = common.turret_type },
         { filter = "name", name = common.water_turret_name, mode = "and" }
       })
@@ -858,7 +857,7 @@ common.dprint("dummy: %s\tposition: %s", {common.print_name_id(dummy), dummy.pos
     if fire and fire.valid then
 common.dprint("Fire is valid -- registering!")
       -- Add data to tables
-      local fire_id = script.register_on_entity_destroyed(fire)
+      local fire_id = script.register_on_object_destroyed(fire)
       local fire_data = {
         dummy_entity = dummy,
         dummy_id = dummy_id,
@@ -867,17 +866,17 @@ common.dprint("Fire is valid -- registering!")
       }
 
 common.show("fire_data", fire_data)
-      global.fire_dummies[dummy_id] = fire_data
-      global.fires[fire_id] = fire_data
+      storage.fire_dummies[dummy_id] = fire_data
+      storage.fires[fire_id] = fire_data
 
       local x = dummy.position.x or dummy.position[1]
       local y = dummy.position.y or dummy.position[2]
 
-      global.dummy_positions[x] = global.dummy_positions[x] or {}
-      global.dummy_positions[x][y] = dummy_id
+      storage.dummy_positions[x] = storage.dummy_positions[x] or {}
+      storage.dummy_positions[x][y] = dummy_id
 
-      --~ global.fire_positions[x] = global.fire_positions[x] or {}
-      --~ global.fire_positions[x][y] = fire_id
+      --~ storage.fire_positions[x] = storage.fire_positions[x] or {}
+      --~ storage.fire_positions[x][y] = fire_id
       end
   end
 
@@ -898,11 +897,11 @@ common.show("fire_data", fire_data)
     --~ if (not id) or (type(id) ~= "number") then
       --~ error("\"" .. tostring(id) .. "\" is not a valid turret id!")
     --~ -- No turret stored with this ID
-    --~ elseif not global.WT_turrets[id] then
+    --~ elseif not storage.WT_turrets[id] then
       --~ error("No turret with id " .. tostring(id) .. " has been registered!")
     --~ -- Invalid turret
-    --~ elseif not global.WT_turrets[id].entity.valid then
-      --~ global.WT_turrets[id] = nil
+    --~ elseif not storage.WT_turrets[id].entity.valid then
+      --~ storage.WT_turrets[id] = nil
       --~ common.dprint("Removed expired id %s from list of registered turrets.", {id})
       --~ return nil
     --~ end
@@ -912,9 +911,9 @@ common.show("fire_data", fire_data)
     --~ ------------------------------------------------------------------------------------
 
 --~ common.dprint ("Looking for turret with id %s.", {id})
---~ common.dprint("global.WT_turrets[%g]: %s", { id, global.WT_turrets[id] } )
+--~ common.dprint("storage.WT_turrets[%g]: %s", { id, storage.WT_turrets[id] } )
 
-    --~ local turret = global.WT_turrets[id].entity
+    --~ local turret = storage.WT_turrets[id].entity
     --~ local new_turret = nil
     --~ local input = nil
     --~ local output = nil
@@ -1067,25 +1066,25 @@ common.show("fire_data", fire_data)
       --~ if t then
         --~ common.show("Created", common.print_name_id(t))
         --~ -- Register new turret (new turrets will keep "tick" and area of the turret they replaced)
-        --~ global.WT_turrets[t.unit_number] = {
+        --~ storage.WT_turrets[t.unit_number] = {
           --~ ["entity"] = t,
-          --~ ["tick"] = global.WT_turrets[id].tick,
-          --~ ["area"] = global.WT_turrets[id].area,
-          --~ ["min_range"] = global.WT_turrets[id].min_range,
-          --~ ["range"] = global.WT_turrets[id].range,
+          --~ ["tick"] = storage.WT_turrets[id].tick,
+          --~ ["area"] = storage.WT_turrets[id].area,
+          --~ ["min_range"] = storage.WT_turrets[id].min_range,
+          --~ ["range"] = storage.WT_turrets[id].range,
           --~ ["id"] = t.unit_number,
         --~ }
         --~ -- Transfer damage dealt by this turret and number of kills to new turret
-        --~ global.WT_turrets[t.unit_number].entity.damage_dealt = properties.damage_dealt
-        --~ global.WT_turrets[t.unit_number].entity.kills = properties.kills
-  --~ common.dprint("global.WT_turrets[%g].entity: %s",
-                --~ { t.unit_number, global.WT_turrets[t.unit_number].entity })
+        --~ storage.WT_turrets[t.unit_number].entity.damage_dealt = properties.damage_dealt
+        --~ storage.WT_turrets[t.unit_number].entity.kills = properties.kills
+  --~ common.dprint("storage.WT_turrets[%g].entity: %s",
+                --~ { t.unit_number, storage.WT_turrets[t.unit_number].entity })
 --~ common.dprint("New contents of %s. 1: %s\t2: %s", {common.print_name_id(t), t.fluidbox and t.fluidbox[1] or "empty", t.fluidbox and t.fluidbox[2] or "empty"})
       --~ else
         --~ error("Something bad happened: Couldn't create " .. new_turret .. "!")
       --~ end
 
-      --~ turret = global.WT_turrets[t.unit_number].entity
+      --~ turret = storage.WT_turrets[t.unit_number].entity
 
     --~ end
     --~ common.dprint("Contents of %s: %s", { common.print_name_id(turret), turret.fluidbox } )
@@ -1103,22 +1102,22 @@ common.show("fire_data", fire_data)
                   --~ { common.print_name_id(turret), game.tick })
 
     --~ -- Check argument
-    --~ if not (turret and turret.valid and global.WT_turrets[turret.unit_number]) then
+    --~ if not (turret and turret.valid and storage.WT_turrets[turret.unit_number]) then
       --~ error("Wrong arguments for function find_fire(turret):\nTurret is not valid!\n")
     --~ end
 
     --~ local ret
 
     --~ -- Determine search area in the direction the turret is facing
-    --~ local area = global.WT_turrets[turret.unit_number].area or
+    --~ local area = storage.WT_turrets[turret.unit_number].area or
                   --~ common.get_turret_area(turret)
 --~ common.show("Turret area", area)
     --~ local x_min = area.left_top.x or area.left_top[1]
     --~ local y_min = area.left_top.y or area.left_top[2]
     --~ local x_max = area.right_bottom.x or area.right_bottom[1]
     --~ local y_max = area.right_bottom.y or area.right_bottom[2]
---~ common.show("global.dummy_positions", global.dummy_positions)
-    --~ for x, y in pairs(global.dummy_positions) do
+--~ common.show("storage.dummy_positions", storage.dummy_positions)
+    --~ for x, y in pairs(storage.dummy_positions) do
 --~ common.dprint("x: %s\tx_min: %s\tx_max: %s", {x, x_min, x_max})
       --~ if x >= x_min and x <= x_max then
 --~ common.dprint("x is valid -- checking y!")

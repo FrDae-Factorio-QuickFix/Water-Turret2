@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------------
 --                       Compatibility with "Bio Industries"                      --
 ------------------------------------------------------------------------------------
-local WT = require('__WaterTurret__/common')("WaterTurret")
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
 
 WT.dprint("Checking for \"Bio Industries\".")
 

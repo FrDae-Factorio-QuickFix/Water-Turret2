@@ -64,13 +64,13 @@ WT.dprint("Dummy is valid!")
 
     local dummy_id = dummy.unit_number
 
-    local fire_id = global.fire_dummies[dummy_id] and global.fire_dummies[dummy_id].fire_id
+    local fire_id = storage.fire_dummies[dummy_id] and storage.fire_dummies[dummy_id].fire_id
 
-    local fire = fire_id and global.fires[fire_id] and
-                    global.fires[fire_id].fire_entity and
-                    global.fires[fire_id].fire_entity.valid
+    local fire = fire_id and storage.fires[fire_id] and
+                    storage.fires[fire_id].fire_entity and
+                    storage.fires[fire_id].fire_entity.valid
 
-    if global.fire_dummies[dummy_id] and fire then
+    if storage.fire_dummies[dummy_id] and fire then
       ret = true
     end
   end
@@ -90,22 +90,22 @@ local function find_fire(turret)
                 { WT.print_name_id(turret), game.tick })
 
   -- Check argument
-  if not (turret and turret.valid and global.WT_turrets[turret.unit_number]) then
+  if not (turret and turret.valid and storage.WT_turrets[turret.unit_number]) then
     error("Wrong arguments for function find_fire(turret):\nTurret is not valid!\n")
   end
 
   local ret
 
   -- Determine search area in the direction the turret is facing
-  local area = global.WT_turrets[turret.unit_number].area or
+  local area = storage.WT_turrets[turret.unit_number].area or
                 WT.get_turret_area(turret)
 WT.show("Turret area", area)
   local x_min = area.left_top.x or area.left_top[1]
   local y_min = area.left_top.y or area.left_top[2]
   local x_max = area.right_bottom.x or area.right_bottom[1]
   local y_max = area.right_bottom.y or area.right_bottom[2]
-WT.show("global.dummy_positions", global.dummy_positions)
-  for x, y in pairs(global.dummy_positions) do
+WT.show("storage.dummy_positions", storage.dummy_positions)
+  for x, y in pairs(storage.dummy_positions) do
 WT.dprint("x: %s\tx_min: %s\tx_max: %s", {x, x_min, x_max})
     if x >= x_min and x <= x_max then
 WT.dprint("x is valid -- checking y!")
@@ -144,7 +144,7 @@ local function find_enemies(turret)
     error(serpent.line(turret) .. " is not a valid argument!")
   end
 
-  if not global.WT_turrets[turret.unit_number] then
+  if not storage.WT_turrets[turret.unit_number] then
     WT.dprint("Turret is not in list!")
     return
   end
@@ -152,17 +152,17 @@ local function find_enemies(turret)
   local ret
 
   -- Determine search area in the direction the turret is facing
-  local area = global.WT_turrets[turret.unit_number].area or WT.get_turret_area(turret)
+  local area = storage.WT_turrets[turret.unit_number].area or WT.get_turret_area(turret)
 
   -- Find entities that are potential enemies
-  WT.show("global.enemy_types", global.enemy_types)
+  WT.show("storage.enemy_types", storage.enemy_types)
   WT.show("area", area)
   WT.dprint("WT.force_relations[%s]: %s", {turret.force.name, WT.force_relations[turret.force.name]})
 
   local enemies = turret.surface.find_entities_filtered({
-    type = global.enemy_types,
+    type = storage.enemy_types,
     --~ position = turret.position,
-    --~ radius = global.WT_turrets[turret.unit_number].range
+    --~ radius = storage.WT_turrets[turret.unit_number].range
     area = area,
     force = WT.force_relations[turret.force.name],
   })
@@ -183,8 +183,8 @@ local function find_enemies(turret)
   end
   WT.dprint("Enemy list after removing %g enemies: %s", {cnt, enemies})
 
-  -- We want to find enemies in the order of enemy types stored in the global table
-  for p, prototype in ipairs(global.enemy_types) do
+  -- We want to find enemies in the order of enemy types stored in the storage table
+  for p, prototype in ipairs(storage.enemy_types) do
     for e, enemy in pairs(enemies or {}) do
 WT.dprint("p: %s\tprototype: %s\te: %s\tenemy: %s", {p, prototype, e, WT.print_name_id(enemy)})
       if enemy.type == prototype then
@@ -226,38 +226,38 @@ WT.dprint("Entered function remove_fire_and_dummy(%s, %g).", { entity_type, id }
   local fire, dummy, f_index, d_index
 
   -- Get entities
-  if entity_type == "fire" and global.fires[id] then
+  if entity_type == "fire" and storage.fires[id] then
 WT.dprint("Looking for fire %s", { id })
     f_index     = id
-    fire        = global.fires[f_index].fire_entity
+    fire        = storage.fires[f_index].fire_entity
 
-    d_index     = f_index and global.fires[f_index].dummy_id
-    dummy       = d_index and global.fire_dummies and
-                  global.fire_dummies[d_index] and
-                  global.fire_dummies[d_index].dummy_entity
+    d_index     = f_index and storage.fires[f_index].dummy_id
+    dummy       = d_index and storage.fire_dummies and
+                  storage.fire_dummies[d_index] and
+                  storage.fire_dummies[d_index].dummy_entity
 
-  elseif entity_type == "dummy" and global.fire_dummies[id] then
+  elseif entity_type == "dummy" and storage.fire_dummies[id] then
 WT.dprint("Looking for dummy %s", { id })
     d_index     = id
-    dummy       = global.fire_dummies[d_index].dummy_entity
+    dummy       = storage.fire_dummies[d_index].dummy_entity
 
-    f_index     = d_index and global.fire_dummies[d_index].fire_id
-    fire        = f_index and global.fires and
-                  global.fires[f_index] and
-                  global.fires[f_index].fire_entity
+    f_index     = d_index and storage.fire_dummies[d_index].fire_id
+    fire        = f_index and storage.fires and
+                  storage.fires[f_index] and
+                  storage.fires[f_index].fire_entity
   end
 WT.dprint("fire[%s]:\t%s", {
   f_index, (fire and fire.valid and fire.name or "NIL")
 })
 
 
-  -- Remove from global tables
+  -- Remove from storage tables
   local function remove(x, y)
-    if global.dummy_positions[x] then
-      global.dummy_positions[x][y] = nil
+    if storage.dummy_positions[x] then
+      storage.dummy_positions[x][y] = nil
     end
-    if global.dummy_positions[x] and not next(global.dummy_positions[x]) then
-      global.dummy_positions[x] = nil
+    if storage.dummy_positions[x] and not next(storage.dummy_positions[x]) then
+      storage.dummy_positions[x] = nil
     end
   end
 
@@ -269,8 +269,8 @@ WT.dprint("fire[%s]:\t%s", {
       y = fire.position.y or fire.position[2]
       remove(x, y)
     end
-    global.fires[f_index] = nil
-WT.dprint("Removed fire " .. f_index .. " from global.fires!")
+    storage.fires[f_index] = nil
+WT.dprint("Removed fire " .. f_index .. " from storage.fires!")
   end
 
   if d_index then
@@ -279,8 +279,8 @@ WT.dprint("Removed fire " .. f_index .. " from global.fires!")
       y = dummy.position.y or dummy.position[2]
       remove(x, y)
     end
-    global.fire_dummies[d_index] = nil
-WT.dprint("Removed dummy " .. d_index .. " from global.fire_dummies!")
+    storage.fire_dummies[d_index] = nil
+WT.dprint("Removed dummy " .. d_index .. " from storage.fire_dummies!")
   end
 
   -- Destroy entities
@@ -296,7 +296,7 @@ WT.show("DESTROYED FIRE", f_index)
 WT.show("DESTROYED DUMMY", d_index)
   end
 
---~ WT.dprint("global: " .. serpent.block(global))
+--~ WT.dprint("storage: " .. serpent.block(storage))
 WT.dprint("f_index: " .. tostring(f_index) .. "\td_index: " .. tostring(d_index))
 
 
@@ -310,19 +310,19 @@ end
 ------------------------------------------------------------------------------------
 local function target_enemy_or_fire(turret)
   WT.dprint("Entered function target_enemy_or_fire(%s) on tick %s.", { turret, game.tick })
---~ WT.show("Number of turrets", table_size(global.WT_turrets))
+--~ WT.show("Number of turrets", table_size(storage.WT_turrets))
 
   -- Check argument
   --~ if type(turret) == "number" then
-    --~ turret = global.WT_turrets[turret] and global.WT_turrets[turret].entity
-  turret = (type(turret) == "number" and global.WT_turrets[turret]
-                            and global.WT_turrets[turret].entity) or
+    --~ turret = storage.WT_turrets[turret] and storage.WT_turrets[turret].entity
+  turret = (type(turret) == "number" and storage.WT_turrets[turret]
+                            and storage.WT_turrets[turret].entity) or
             (turret and turret.valid and
-              global.WT_turrets[turret.unit_number] and
-              global.WT_turrets[turret.unit_number].entity)
+              storage.WT_turrets[turret.unit_number] and
+              storage.WT_turrets[turret.unit_number].entity)
 
   --~ if type(turret) == "number" then
-    --~ turret = global.WT_turrets[turret] and global.WT_turrets[turret].entity
+    --~ turret = storage.WT_turrets[turret] and storage.WT_turrets[turret].entity
 
   --~ elseif (not WT.is_WT_turret(turret)) or turret.name == WT.steam_turret_name then
   --~ elseif not WT.is_WT_turret_name(turret, WT.water_turret_name) then
@@ -331,7 +331,7 @@ local function target_enemy_or_fire(turret)
     --~ return
   --~ end
 --~ WT.show("turret", WT.print_name_id(turret))
---~ WT.show("Number of turrets", table_size(global.WT_turrets))
+--~ WT.show("Number of turrets", table_size(storage.WT_turrets))
 
   ------------------------------------------------------------------------------------
   -- Leave early?
@@ -378,13 +378,13 @@ WT.show("Priority setting", WT.waterturret_priority)
 WT.show("not target", (not target))
 WT.show("WT.is_WT_dummy(target)", WT.is_WT_dummy(target))
   if WT.waterturret_priority == "fire" then
-WT.show("Looking for fire", global.WT_turrets[turret.unit_number])
+WT.show("Looking for fire", storage.WT_turrets[turret.unit_number])
     if not (target and WT.is_WT_dummy(target)) then
 WT.dprint("Need to find fire")
       --~ local fire = WT.find_fire(turret)
       local fire = find_fire(turret)
 WT.show("Found fire", fire)
-      fire = fire and global.fire_dummies[fire] and global.fire_dummies[fire].dummy_entity
+      fire = fire and storage.fire_dummies[fire] and storage.fire_dummies[fire].dummy_entity
       if fire and fire.valid then
         turret.shooting_target = fire
       end
@@ -413,7 +413,7 @@ end
 --                               Act on turret tick                               --
 ------------------------------------------------------------------------------------
 local function check_turret(id)
-  local turret = id and global.WT_turrets[id]
+  local turret = id and storage.WT_turrets[id]
 
 
 WT.show("Turret data", turret and WT.print_name_id(turret.entity or "nil"))
@@ -424,7 +424,7 @@ WT.show("action_delay", WT.action_delay)
 
   -- Remove invalid turrets from list
   if not (turret and WT.is_WT_turret(turret.entity)) then
-    global.WT_turrets[id] = nil
+    storage.WT_turrets[id] = nil
     --~ remove_turret(id)
     WT.dprint("Removed turret %s from list because it was not valid.", { id })
 
@@ -439,25 +439,25 @@ WT.dprint("May act on turret")
     --~ turret_id = swap_turrets.swap_turrets(id) or id
     turret_id = swap_turrets.swap_turrets(id)
 WT.dprint("Returned from swap_turrets. Old ID: %s\tNew ID: %s turret_id", {id, turret_id})
-    --~ if turret_id and global.WT_turrets[turret_id].entity.valid then
+    --~ if turret_id and storage.WT_turrets[turret_id].entity.valid then
     --~ if WT.is_WT_turret(turret_id) then
 
       -- Remove old turret from list
       if turret_id ~= id then
-        global.WT_turrets[id] = nil
+        storage.WT_turrets[id] = nil
       end
 
       -- Set next action tick
       --~ local next_tick = game.tick + WT.action_delay
-      --~ global.WT_turrets[turret_id].tick = game.tick + WT.action_delay
-      global.WT_turrets[turret_id].tick = next_tick
-      global.turret_ticks[next_tick] = global.turret_ticks[next_tick] or {}
-      global.turret_ticks[next_tick][turret_id] = true
+      --~ storage.WT_turrets[turret_id].tick = game.tick + WT.action_delay
+      storage.WT_turrets[turret_id].tick = next_tick
+      storage.turret_ticks[next_tick] = storage.turret_ticks[next_tick] or {}
+      storage.turret_ticks[next_tick][turret_id] = true
 
 
       -- Check if we need to find fires or retarget
       if WT.waterturret_priority ~= "default" and
-        WT.is_WT_turret_name(global.WT_turrets[turret_id].entity,
+        WT.is_WT_turret_name(storage.WT_turrets[turret_id].entity,
                               WT.water_turret_name) then
         WT.dprint("Water turret -- going to target_enemy_or_fire!")
         target_enemy_or_fire(turret_id)
@@ -466,7 +466,7 @@ WT.dprint("Returned from swap_turrets. Old ID: %s\tNew ID: %s turret_id", {id, t
     --~ -- This should never be reached!
     --~ else
       --~ error("Something went wrong! Turret with id ".. tostring(turret_id) ..
-            --~ "doesn't exist!\n" .. serpent.block(global.WT_turrets))
+            --~ "doesn't exist!\n" .. serpent.block(storage.WT_turrets))
     --~ end
   end
   return turret_id
@@ -498,11 +498,11 @@ end
 -- Do this on every tick
 local function on_tick(event)
 WT.dprint("Entered function on_tick on tick %s", {event.tick})
-  --~ global.enemy_types = global.enemy_types or WT.enemies("get_list")
-  --~ global.acids = global.acids or WT.make_name_list(ignore_or_acid.get_acid())
-  --~ global.ignore_fires = global.ignore_fires or ignore_or_acid.get_ignorelist()
+  --~ storage.enemy_types = storage.enemy_types or WT.enemies("get_list")
+  --~ storage.acids = storage.acids or WT.make_name_list(ignore_or_acid.get_acid())
+  --~ storage.ignore_fires = storage.ignore_fires or ignore_or_acid.get_ignorelist()
 
-  global.turret_ticks = global.turret_ticks or {}
+  storage.turret_ticks = storage.turret_ticks or {}
 
   local tick = event.tick
   local next_tick = tick + WT.action_delay
@@ -510,12 +510,12 @@ WT.show("event tick", tick)
 WT.show("next_tick", next_tick)
 
 
-  local turrets = global.turret_ticks[tick]
+  local turrets = storage.turret_ticks[tick]
 WT.show("turrets", turrets)
   if turrets and next(turrets) then
 --~ log("Active turrets on tick " .. tick .. ": " .. table_size(turrets))
     local new_id
-    global.turret_ticks[next_tick] = global.turret_ticks[next_tick] or {}
+    storage.turret_ticks[next_tick] = storage.turret_ticks[next_tick] or {}
 
     --~ WT.dprint("%s turrets are active this tick: %s", {table_size(turrets), turrets})
     WT.dprint("%s turrets are active this tick.", {table_size(turrets)})
@@ -523,16 +523,16 @@ WT.show("turrets", turrets)
       WT.dprint("Checking turret %s", {turret})
       new_id = check_turret(turret)
 
-      global.turret_ticks[next_tick][new_id] = true
+      storage.turret_ticks[next_tick][new_id] = true
     end
-    --~ global.turret_ticks[tick] = nil
---~ WT.dprint("Removed tick %s from list: %s", {tick, global.turret_ticks})
+    --~ storage.turret_ticks[tick] = nil
+--~ WT.dprint("Removed tick %s from list: %s", {tick, storage.turret_ticks})
   else
 WT.dprint("Nothing to do on tick %s", {tick})
   end
 
-  global.turret_ticks[tick] = nil
---~ WT.dprint("Removed tick %s from list: %s", {tick, global.turret_ticks})
+  storage.turret_ticks[tick] = nil
+--~ WT.dprint("Removed tick %s from list: %s", {tick, storage.turret_ticks})
 WT.dprint("Removed tick %s from list.", {tick})
 
 WT.dprint("End of function on_tick on tick %s", {event.tick})
@@ -545,7 +545,7 @@ local function extinguish_fire(entity)
   WT.dprint("Entered function extinguish_fire(%s).", { WT.print_name_id(entity) })
 
   local id = (entity and type(entity) == "number" and entity) or entity.unit_number
-  local dummy = id and global.fire_dummies[id] and global.fire_dummies[id].dummy_entity
+  local dummy = id and storage.fire_dummies[id] and storage.fire_dummies[id].dummy_entity
 
   if dummy then
     local fires = dummy.surface.find_entities_filtered{
@@ -556,7 +556,7 @@ local function extinguish_fire(entity)
 
     if fires then
       for f, fire in pairs(fires) do
-        if (not global.ignore_fires[fire.name]) then
+        if (not storage.ignore_fires[fire.name]) then
           -- Don't need to raise the event because register_on_entity_destroyed is used!
           fire.destroy()
         end
@@ -582,10 +582,10 @@ local function remove_fire_dummies_from_surface(event)
     })
 WT.dprint("Found %g dummies on surface \"%s\".", {#dummies, s})
 
-    -- Destroy all dummies that are not in our global lists!
+    -- Destroy all dummies that are not in our storage lists!
     for d, dummy in pairs(dummies) do
-      if not global.fire_dummies[dummy.unit_number] then
-WT.dprint("%s is not in global dummy list!", { WT.print_name_id(dummy) })
+      if not storage.fire_dummies[dummy.unit_number] then
+WT.dprint("%s is not in storage dummy list!", { WT.print_name_id(dummy) })
         dummy.destroy()
 WT.dprint("Removed %s!", { WT.print_name_id(dummy) })
       end
@@ -607,10 +607,10 @@ local function remove_fire_dummies_from_table(event)
   local dummies = {}
   local cnt
 
-WT.dprint("Found %g dummies in global.fire_dummies.", { table_size(global.fire_dummies) })
+WT.dprint("Found %g dummies in storage.fire_dummies.", { table_size(storage.fire_dummies) })
 
-  -- Destroy all dummies in our global list that don't mark fires!
-  for d, dummy in pairs(global.fire_dummies) do
+  -- Destroy all dummies in our storage list that don't mark fires!
+  for d, dummy in pairs(storage.fire_dummies) do
     if not dummy_marks_fire(dummy) then
 WT.dprint("%s is in our table but doesn't mark fire.", { WT.print_name_id(dummy) })
       remove_fire_and_dummy("dummy", dummy.dummy_id)
@@ -635,11 +635,11 @@ local function on_built(event)
   if entity and entity.valid then
     -- Turret was built
     if entity.type == WT.turret_type and WT.turret_names[entity.name] then
-      global.WT_turrets[entity.unit_number] = {}
+      storage.WT_turrets[entity.unit_number] = {}
       local area = (entity.name ~= WT.extinguisher_turret_name) and
                     WT.get_turret_area(entity) or nil
       -- range may already be set in WT.get_turret_area()!
-      local range = global.WT_turrets[entity.unit_number].range
+      local range = storage.WT_turrets[entity.unit_number].range
 
       WT.force_relations[entity.force.name] = WT.force_relations[entity.force] or
                                           WT.get_enemy_forces(entity.force)
@@ -648,7 +648,7 @@ WT.dprint("WT.force_relations[%s]: %s", {entity.force.name, WT.force_relations[e
       local next_tick = event.tick
       local id = entity.unit_number
 
-      global.WT_turrets[id] = {
+      storage.WT_turrets[id] = {
         entity = entity,
         -- We want to check the new turret as soon as possible!
         tick = next_tick,
@@ -661,10 +661,10 @@ WT.dprint("WT.force_relations[%s]: %s", {entity.force.name, WT.force_relations[e
         range = range or entity.prototype.attack_parameters.range,
         enemy_forces = WT.force_relations[entity.force.name],
       }
-      global.turret_ticks[next_tick] = global.turret_ticks[next_tick] or {}
-      global.turret_ticks[next_tick][id] = true
+      storage.turret_ticks[next_tick] = storage.turret_ticks[next_tick] or {}
+      storage.turret_ticks[next_tick][id] = true
 
-WT.dprint("global.WT_turrets[%s]: %s", {entity.unit_number, global.WT_turrets[entity.unit_number]})
+WT.dprint("storage.WT_turrets[%s]: %s", {entity.unit_number, storage.WT_turrets[entity.unit_number]})
     end
   end
 
@@ -677,17 +677,17 @@ end
 local function remove_turret(turret_id)
   WT.dprint("Entered function remove_turret(%s)", {turret_id})
 
-  local turret = turret_id and global.WT_turrets[turret_id]
+  local turret = turret_id and storage.WT_turrets[turret_id]
 
-    --~ global.WT_turrets[entity.unit_number] = nil
+    --~ storage.WT_turrets[entity.unit_number] = nil
     if turret then
 
   WT.show("Removing", WT.print_name_id(turret.entity))
-      global.turret_ticks[turret.tick][turret_id] = nil
-      if not next(global.turret_ticks[turret.tick]) then
-        global.turret_ticks[turret.tick] = nil
+      storage.turret_ticks[turret.tick][turret_id] = nil
+      if not next(storage.turret_ticks[turret.tick]) then
+        storage.turret_ticks[turret.tick] = nil
       end
-      global.WT_turrets[turret_id] = nil
+      storage.WT_turrets[turret_id] = nil
 
     end
   WT.dprint("End of function remove_turret(%s)", { WT.print_name_id(turret) })
@@ -703,7 +703,7 @@ local function on_player_rotated_entity(event)
 
   if WT.is_WT_turret(entity) and not WT.is_WT_turret_name(WT.extinguisher_turret_name) then
     WT.dprint("%s has been moved: recalculating area!", { WT.print_name(entity) })
-    global.WT_turrets[entity.unit_number].area = WT.get_turret_area(entity)
+    storage.WT_turrets[entity.unit_number].area = WT.get_turret_area(entity)
   end
 
   WT.dprint("End of function on_player_rotated_entity(%s).", { WT.print_name_id(event.entity) })
@@ -719,7 +719,7 @@ local function on_moved(event)
 
   if WT.is_WT_turret(entity) then
     WT.dprint("%s has been moved: recalculating area!", { WT.print_name(entity) })
-    global.WT_turrets[entity.unit_number].area = WT.get_turret_area(entity)
+    storage.WT_turrets[entity.unit_number].area = WT.get_turret_area(entity)
   end
 
   WT.dprint("End of function on_moved(%s).", { WT.print_name_id(event.moved_entity) })
@@ -761,7 +761,7 @@ end
 local function init()
   WT.dprint("Entered function init().")
   if WT.debug_in_log then
-    game.check_prototype_translations()
+    helpers.check_prototype_translations()
   end
 
 --~ local dummy = game.entity_prototypes[WT.fire_dummy_name]
@@ -773,30 +773,30 @@ local function init()
   WT.debug_in_log = settings.global["WT-debug_to_log"].value
 
   ------------------------------------------------------------------------------------
-  -- Initialize global tables
-  global = global or {}
-  global.WT_turrets = global.WT_turrets or {}
-  global.turret_ticks = global.turret_ticks or {}
---~ WT.show("global.WT_turrets", global.WT_turrets)
-  global.fires = global.fires or {}
---~ WT.show("global.fires", global.fires)
-  global.fire_dummies = global.fire_dummies or {}
---~ WT.show("global.fire_dummies", global.fire_dummies)
-  global.dummy_positions = global.dummy_positions or {}
+  -- Initialize storage tables
+  storage = storage or {}
+  storage.WT_turrets = storage.WT_turrets or {}
+  storage.turret_ticks = storage.turret_ticks or {}
+--~ WT.show("storage.WT_turrets", storage.WT_turrets)
+  storage.fires = storage.fires or {}
+--~ WT.show("storage.fires", storage.fires)
+  storage.fire_dummies = storage.fire_dummies or {}
+--~ WT.show("storage.fire_dummies", storage.fire_dummies)
+  storage.dummy_positions = storage.dummy_positions or {}
 
-  global.acids = WT.make_name_list(ignore_or_acid.get_acid())
+  storage.acids = WT.make_name_list(ignore_or_acid.get_acid())
   WT.acid_types = ignore_or_acid.get_acid()
-  global.enemy_types = WT.enemies("get_list")
-  global.enemy_healing = WT.enemy_healing(global.enemy_types)
-  global.ignore_fires = ignore_or_acid.get_ignorelist()
+  storage.enemy_types = WT.enemies("get_list")
+  storage.enemy_healing = WT.enemy_healing(storage.enemy_types)
+  storage.ignore_fires = ignore_or_acid.get_ignorelist()
 
-WT.show("global.acids", {global.acids})
+WT.show("storage.acids", {storage.acids})
 WT.show("WT.acid_types", {WT.acid_types})
-WT.show("global.ignore_fires", {global.ignore_fires})
-WT.show("global.enemy_types", {global.enemy_types})
-WT.show("global.enemy_healing", {global.enemy_healing})
+WT.show("storage.ignore_fires", {storage.ignore_fires})
+WT.show("storage.enemy_types", {storage.enemy_types})
+WT.show("storage.enemy_healing", {storage.enemy_healing})
 
-WT.show("Number of turrets", table_size(global.WT_turrets))
+WT.show("Number of turrets", table_size(storage.WT_turrets))
 
   ------------------------------------------------------------------------------------
   -- Make sure our recipe is enabled if it should be
@@ -807,7 +807,7 @@ WT.show("Number of turrets", table_size(global.WT_turrets))
       WT.dprint("Reset technology \"turrets\" for force %s.", { f })
     end
   end
-WT.show("Number of turrets", table_size(global.WT_turrets))
+WT.show("Number of turrets", table_size(storage.WT_turrets))
 
   ------------------------------------------------------------------------------------
   -- Forces
@@ -817,7 +817,7 @@ WT.show("Number of turrets", table_size(global.WT_turrets))
     game.create_force(WT.dummy_force)
   end
 
-WT.show("Number of turrets", table_size(global.WT_turrets))
+WT.show("Number of turrets", table_size(storage.WT_turrets))
 
   WT.force_relations = {}
 
@@ -844,21 +844,21 @@ WT.show("Number of turrets", table_size(global.WT_turrets))
 
   -- Set enemy forces water turrets should target. This will allow for easier
   -- filtering when searching the surface for enemies.
-  for t, turret in pairs(global.WT_turrets) do
+  for t, turret in pairs(storage.WT_turrets) do
 WT.show("t", t)
 WT.show("turret.entity", turret.entity and turret.entity.valid)
     if turret.entity.valid then
       WT.get_turret_enemies(turret.entity)
     else
-      global.WT_turrets[t] = nil
+      storage.WT_turrets[t] = nil
       WT.dprint("Removed invalid turret %s!", {t})
     end
   end
 WT.show("List of forces with enemy forces", WT.force_relations)
-WT.show("Turrets", global.WT_turrets)
+WT.show("Turrets", storage.WT_turrets)
 
 
-WT.show("Number of turrets", table_size(global.WT_turrets))
+WT.show("Number of turrets", table_size(storage.WT_turrets))
 
 
   -- Add event handler for "Picker Dollies"
@@ -884,7 +884,7 @@ local function on_load()
   log("Entered function on_load().")
 
   -- Turn debugging on or off
-  WT.debug_in_log = settings.global["WT-debug_to_log"].value
+  WT.debug_in_log = settings.storage["WT-debug_to_log"].value
 
   -- Compatibility with "Picker Dollies" -- add event handler
   if remote.interfaces["PickerDollies"] and
@@ -909,7 +909,7 @@ WT.show("event.cause", WT.print_name_id(event.cause))
 WT.show("event.entity", WT.print_name_id(event.entity))
 
 WT.show("event.entity.health", event.entity and event.entity.health)
-WT.show("event.entity.prototype.max_health", event.entity and event.entity.prototype.max_health)
+--WT.show("event.entity.prototype.max_health", event.entity and event.entity.prototype.max_health)
 WT.show("event.damage_type.name", event.damage_type and event.damage_type.name)
 WT.show("event.final_damage_amount", event.final_damage_amount)
 WT.show("event.final_health", event.final_health)
@@ -996,7 +996,7 @@ WT.show("event", event)
     --~ -- the damaged entity has healing_per_tick. Not only would this cancel out all
     --~ -- damage, it will also prevent turrets to switching to a new target. Therefore,
     --~ -- we cancel out the healing effect.
-    --~ entity.health = entity.health - global.enemy_healing[entity.type][entity.name]
+    --~ entity.health = entity.health - storage.enemy_healing[entity.type][entity.name]
     --~ end
     if turret.name == WT.steam_turret_name then
       local ammo = turret.fluidbox[1]
@@ -1020,7 +1020,7 @@ WT.show("entity.health after adjusting steam damage", entity.health)
     -- damage, it will also prevent turrets to switching to a new target. Therefore,
     -- we cancel out the healing effect.
     if damage_type == WT.water_damage_name or damage_type == WT.steam_damage_name then
-        entity.health = entity.health - global.enemy_healing[entity.type][entity.name]
+        entity.health = entity.health - storage.enemy_healing[entity.type][entity.name]
     end
   end
 WT.show("Entity health: ", entity.health)
@@ -1041,7 +1041,7 @@ script.on_init(init)
 script.on_configuration_changed(function(event)
 WT.dprint("Entered event script for on_configuration_changed(%s)", {event})
   -- Water Turret: Something has changed, maybe a setting?
-  local WT_changes = event.mod_changes["WaterTurret"]
+  local WT_changes = event.mod_changes["WaterTurret-revived"]
 WT.show("event.mod_startup_settings_changed", event.mod_startup_settings_changed)
   -- Mod is installed now and was installed before, so a setting must have changed.
   if event.mod_startup_settings_changed then
@@ -1052,7 +1052,7 @@ WT.dprint("Mod setting must have changed")
     -- Reset target of turrets that shoot at spawners/turrets if these have been
     -- made immune by the changed settings
     local target
-    for t, turret in pairs(global.WT_turrets) do
+    for t, turret in pairs(storage.WT_turrets) do
       if turret.entity and turret.entity.valid then
         target = turret.entity.shooting_target
         if target and not (target.valid and WT.enemies(target.type)) then
@@ -1079,13 +1079,13 @@ WT.dprint("New target of %s: %s", {
 
       for f, force in pairs(game.forces) do
         -- Only necessary if the tech has been researched already!
-        if game.technology_prototypes[tech] and force.technologies[tech].researched then
+        if prototypes.technology[tech] and force.technologies[tech].researched then
 WT.dprint("Tech exists and has been researched by force %s!", {force.name})
           -- Unresearch tech to remove effects
           force.technologies[tech].researched = false
           -- Check if all prerequisite techs have been researched
           local prereqs_found = true
-          for p, prerequisite in pairs (game.technology_prototypes[tech].prerequisites) do
+          for p, prerequisite in pairs (prototypes.technology[tech].prerequisites) do
             if not force.technologies[p].researched then
 WT.dprint("Prerequisite has not been researched yet by force %s!", {force.name})
               prereqs_found = false
@@ -1103,7 +1103,7 @@ WT.dprint("Reenabling tech %s for force %s!", {tech, force.name})
   end
 
   -- Initialize game!
-  init(event)
+  --init(event)
   WT.dprint("End of event script for on_configuration_changed(%s)", {event})
 end)
 
@@ -1215,13 +1215,16 @@ end)
 
 ------------------------------------------------------------------------------------
 -- Fire has been destroyed
-script.on_event(defines.events.on_entity_destroyed, function(event)
+
+script.on_event(defines.events.on_object_destroyed, function(event)
+
   WT.dprint("Entered event script for events.on_entity_destroyed(%s).", { event }, "line")
 
   local id = event.registration_number
 
-  if id and global.fires[id] then
-    WT.dprint("Removing fire %s from global list!", { id })
+
+  if id and storage.fires[id] then
+    WT.dprint("Removing fire %s from storage list!", { id })
     remove_fire_and_dummy("fire", id)
   end
 
@@ -1239,7 +1242,7 @@ end)
 
 
 ------------------------------------------------------------------------------------
--- Remove fire dummies that mark no fire from global table every 20 minutes
+-- Remove fire dummies that mark no fire from storage table every 20 minutes
 script.on_nth_tick(20*60*60, function(event)
   WT.dprint("Entered event script for on_nth_tick(%s).", { event }, "line")
   remove_fire_dummies_from_table(event)
@@ -1359,7 +1362,7 @@ script.on_event(defines.events.on_entity_died, function(event)
 script.on_event(defines.events.on_entity_damaged, on_entity_damaged, {
   -- Entities were damaged by our turrets. As most entities with health are immune
   -- to our damage, this will be an enemy or another entity intended to be damaged.
-  -- (Check __WaterTurret__/prototypes_with_health.lua for prototypes listed in
+  -- (Check __WaterTurret-revived__/prototypes_with_health.lua for prototypes listed in
   -- prototypes_with_health.attack and prototypes_with_health.vulnerable!)
 
   -- Increase steam damage for enemy entities; check if fire dummies mark fire!
@@ -1388,7 +1391,9 @@ script.on_event(defines.events.on_tick, on_tick)
 --                    FIND LOCAL VARIABLES THAT ARE USED GLOBALLY                 --
 --                              (Thanks to eradicator!)                           --
 ------------------------------------------------------------------------------------
-setmetatable(_ENV,{
+
+--[[setmetatable(_ENV,{
+
   __newindex = function (self,key,value) --locked_global_write
     error('\n\n[ER Global Lock] Forbidden global *write*:\n'
       .. serpent.line{key = key or '<nil>',value = value or '<nil>'} .. '\n')
@@ -1400,3 +1405,6 @@ setmetatable(_ENV,{
     end
   end ,
 })
+
+--]]
+

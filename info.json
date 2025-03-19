@@ -1,12 +1,12 @@
 {
-  "name": "WaterTurret",
-  "version": "1.1.0",
+  "name": "WaterTurret-revived",
+  "version": "1.1.4",
   "title": "Water Turret☂.☔",
-  "author": "DellAquila, Pi-C",
-  "factorio_version": "1.1",
+  "author": "DellAquila, Pi-C, MsBinaryLily",
+  "factorio_version": "2.0",
   "description": "This mod provides an early game Water thrower that does minimal damage but slows down the enemies (use steam for extra damage!) and an advanced turret for extinguishing fires (use \"Hardened pipes\" to give it extra resistances!).",
   "dependencies": [
-                    "base >= 1.1.0",
+                    "base >= 2.0",
                     "? apm_power",
                     "(?) PickerDollies",
                     "(?) Rampant",

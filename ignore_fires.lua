@@ -22,9 +22,16 @@ local function make_list(patterns)
   local fires
   -- Control stage
   if game then
-    fires = game.get_filtered_entity_prototypes({
-      { filter = "type", type = "fire" }
-    }) or {}
+    fires = {}
+    for name, surface in pairs(game.surfaces) do
+      local f = surface.find_entities_filtered{type = "fire"}
+      for _, fire in ipairs(f) do
+        table.insert(fires, fire.prototype)
+      end
+    end
+    --fires = game.get_filtered_entity_prototypes({
+    --  { filter = "type", type = "fire" }
+    --}) or {}
   -- Data stage
   elseif mods then
     fires = data.raw.fire

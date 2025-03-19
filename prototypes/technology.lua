@@ -1,4 +1,4 @@
-local WT = require('__WaterTurret__/common')("WaterTurret")
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
 local MOD_PIX = WT.mod_root .. "graphics/icons/"
 
 data:extend({
@@ -11,12 +11,11 @@ data:extend({
     localised_description = WT.hardened_pipes and
       {"technology-description." .. WT.extinguisher_turret_name .. "-hardened"} or
       {"technology-description." .. WT.extinguisher_turret_name},
-    icon_size = 128,
-    icon_mipmaps = 0,
     --~ icon = MOD_PIX .. "extinguisher-tech-icon.png",
     icons = {
       {
         icon = MOD_PIX .. "extinguisher-tech-icon-2.png",
+        icon_size = 128,
         tint = WT.extinguisher_turret_tint
       }
     },

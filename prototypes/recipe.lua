@@ -1,4 +1,4 @@
-local WT = require('__WaterTurret__/common')("WaterTurret")
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
 local MOD_PIX = WT.mod_root .. "graphics/icons/"
 
 ------------------------------------------------------------------------------------
@@ -48,21 +48,31 @@ local function make_recipe_icon(item)
   return {
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-recipe-turret-bg.png",
+      icon_size = 128,
+      scale = 0.5
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-recipe-turret.png",
-      tint = WT.extinguisher_turret_tint
+      tint = WT.extinguisher_turret_tint,
+      icon_size = 128,
+      scale = 0.5
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-recipe-fluid-bg.png",
+      icon_size = 128,
+      scale = 0.5
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-recipe-fluid.png",
-      tint = WT.fire_ex_fluid_tint
+      tint = WT.fire_ex_fluid_tint,
+      icon_size = 128,
+      scale = 0.5
 
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-recipe-ingredient-" .. item .. ".png",
+      icon_size = 128,
+      scale = 0.5
     },
   }
 end
@@ -78,23 +88,20 @@ waterrecipe.localised_name = {"entity-name." .. WT.water_turret_name}
 waterrecipe.localised_description = {"entity-description." .. WT.water_turret_name}
 --~ waterrecipe.icon = MOD_PIX .. "water-turret-icon.png"
 waterrecipe.icons = {
-  {icon = MOD_PIX .."turret-icon.png"},
-  {icon = MOD_PIX .. "turret-icon-raw.png", tint = WT.water_turret_tint}
+  {icon = MOD_PIX .."turret-icon.png", scale = 0.5, icon_size = 64},
+  { icon = MOD_PIX .. "turret-icon-raw.png", tint = WT.water_turret_tint, scale = 0.5,   icon_size = 64 }
 }
-waterrecipe.icon_size = 64
-waterrecipe.icon_mipmaps = 0
-waterrecipe.scale = 0.5
 local recipe_data = {
   ["name"] = WT.water_turret_name,
   ["enabled"] = false,
   ["ingredients"] = {
-    {"iron-plate", 30},
-    {"iron-gear-wheel", 15},
-    {"pipe", 10},
-    {"offshore-pump", 1}
+    { type = "item", name = "iron-plate", amount = 30},
+    { type = "item", name = "iron-gear-wheel", amount = 15 },
+    { type = "item", name = "pipe",            amount = 10 },
+    { type = "item", name = "offshore-pump",   amount = 1 }
   },
-  ["result"] = WT.water_turret_name,
-  ["result_count"] = 1,
+
+  ["results"] = {{type = "item", name = WT.water_turret_name, amount = 1}},
   ["energy_required"] = waterrecipe.energy_required
 }
 
@@ -127,13 +134,13 @@ recipe_data = {
   ["enabled"] = false,
   ["ingredients"] = {
     {WT.water_turret_name, 1},
-    {"steel-plate", 15},
-    {"iron-gear-wheel", 30},
-    {"advanced-circuit", 5},
+    { type = "item",        name = "steel-plate",  amount = 15 },
+    { type = "item",        name = "iron-gear-wheel", amount = 30 },
+    { type = "item",        name = "advanced-circuit", amount = 5 },
     {type = "fluid", name = "lubricant", amount = 50},
   },
-  ["result"] = WT.extinguisher_turret_name,
-  ["result_count"] = 1,
+
+  ["results"] = {{type = "item", name = WT.extinguisher_turret_name, amount = 1}},
   ["energy_required"] = extinguisherrecipe.energy_required * 3
 }
 
@@ -182,6 +189,7 @@ recipe = {
   icons = make_recipe_icon("oil"),
   icon_size = 128,
   category = "chemistry",
+  subgroup = "fluid",
   ingredients = {},
   results = {},
   enabled = false,

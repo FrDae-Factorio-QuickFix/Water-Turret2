@@ -7,7 +7,7 @@
 --  We should also make our turrets immune to damage from "fide-water".
 ------------------------------------------------------------------------------------
 
-local WT = require('__WaterTurret__/common')("WaterTurret")
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
 
 WT.dprint("Checking for stream from \"Fire Department QuickFix\" and friends.")
 
