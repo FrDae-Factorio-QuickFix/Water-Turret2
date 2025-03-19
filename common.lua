@@ -185,7 +185,8 @@ return function(mod_name)
   -- Fluid tint
   --~ common.water_color = f["water"] and  f["water"].base_color
   --~ common.steam_color = f["steam"] and f["steam"].base_color
-  common.fire_ex_fluid_tint = { r = 0.816, g = 0.820, b = 0.106, a = 1.000 }
+  --  common.fire_ex_fluid_tint = { r = 0.816, g = 0.820, b = 0.106, a = 1.000 }
+  common.fire_ex_fluid_tint = { r = 1, g = 0.961, b = 0.882, a = 1.000 } --#FFF5E1
   --~ common.fire_ex_fluid_tint = { r = 1, g = 1, b = 1, a = 1.000 }
 
   -- Searchable list of fluid names
