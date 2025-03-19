@@ -1,4 +1,4 @@
-local WT = require('__WaterTurret__/common')("WaterTurret")
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
 
 ------------------------------------------------------------------------------------
 --                     Compatibility with "Will-o'-the-wisps"                     --

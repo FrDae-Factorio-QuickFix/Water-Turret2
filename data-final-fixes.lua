@@ -1,7 +1,7 @@
-local WT = require('__WaterTurret__/common')("WaterTurret")
-local prototypes_with_health = require('__WaterTurret__/prototypes_with_health')
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
+local prototypes_with_health = require('__WaterTurret-revived__/prototypes_with_health')
 
-local acid = require('__WaterTurret__/ignore_fires')
+local acid = require('__WaterTurret-revived__/ignore_fires')
 
 ------------------------------------------------------------------------------------
 --                               Utility functions                                --
@@ -72,6 +72,9 @@ for _, prototypes in ipairs(prototypes_with_health.immune) do
             --~ prototypes_with_health.attack[prototypes]) then
             prototypes_with_health.attack(prototypes)) then
 
+
+   --if data.raw[prototypes] then     
+
     for p, prototype in pairs(data.raw[prototypes]) do
 WT.dprint("Type: %s\tPrototype: %s", { prototypes, prototype.name })
       -- Ignore dummies
@@ -86,10 +89,13 @@ WT.dprint("Type: %s\tPrototype: %s", { prototypes, prototype.name })
             replace_resistance(prototype.resistances, resistance)
           end
         end
-      end
+
+      --end
 --~ WT.show("Resistances", prototype.resistances)
     end
   end
+  end
+
 
 end
 
@@ -331,8 +337,10 @@ if barrel and barrel.icons then
 WT.dprint("Changed barrel icon for %s!", {barrel.name})
 end
 
-for n, name in ipairs({"fill", "empty"}) do
-  barrel = data.raw.recipe[name .. "-" .. WT.fire_ex_fluid .. "-barrel"]
+
+for n, name in ipairs({"", "empty-"}) do
+  local barrel = data.raw.recipe[name .. WT.fire_ex_fluid .. "-barrel"]
+
   if barrel and barrel.icons then
     if barrel.icons[1] then
       barrel.icons[1].tint = top_and_hoop_color
@@ -341,7 +349,9 @@ for n, name in ipairs({"fill", "empty"}) do
         barrel.icons[3].tint = top_and_hoop_color
     end
   end
-WT.dprint("Changed barrel icon for recipe %s.", barrel.name )
+
+--WT.dprint("Changed barrel icon for recipe %s.", barrel.name )
+
 end
 
 

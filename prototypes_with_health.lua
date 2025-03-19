@@ -54,17 +54,15 @@ prototypes_with_health.healing = function(entity_types)
 
   local ret = {}
   local prototype_list
-
-  for p, prototypes in pairs(entity_types) do
-    ret[prototypes] = {}
---~ log("Looking for entities of type " .. serpent.line(prototypes))
-    prototype_list = game.get_filtered_entity_prototypes({
-      {filter = "type", type = prototypes}
-    })
+  for p, proto in pairs(entity_types) do
+    ret[proto] = {}
+--~ log("Looking for entities of type " .. serpent.line(proto))
+    prototype_list = prototypes.get_entity_filtered{{ filter = "type", type = proto }}
+    
 
     for _, protoname in pairs(prototype_list) do
 --~ log("name: " .. serpent.block(protoname.name))
-      ret[prototypes][protoname.name] = protoname.healing_per_tick or 0
+      ret[proto][protoname.name] = protoname.healing_per_tick or 0
     end
   end
   --~ log("End of function healing(" .. serpent.line(entity_types) .. ")")
@@ -74,7 +72,7 @@ end
 
 --~ ------------------------------------------------------------------------------------
 --~ -- Make list of forces that are enemy of the turret force and store it with the
---~ -- turret data in the global table.
+--~ -- turret data in the storage table.
 --~ prototypes_with_health.get_enemy_forces = function(check_force)
   --~ log(string.format("Entered function get_enemy_forces(%s).", check_force))
 
@@ -141,7 +139,9 @@ prototypes_with_health.immune = {
   "constant-combinator",
   "construction-robot",
   "container",
-  "curved-rail",
+
+  "curved-rail-a",
+  "curved-rail-b",
   "decider-combinator",
   "electric-energy-interface",
   "electric-pole",
@@ -170,7 +170,6 @@ prototypes_with_health.immune = {
   "offshore-pump",
   "pipe",
   "pipe-to-ground",
-  "player-port",
   "power-switch",
   "programmable-speaker",
   "pump",

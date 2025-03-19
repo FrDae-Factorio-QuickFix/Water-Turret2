@@ -1,4 +1,4 @@
-local WT = require('__WaterTurret__/common')("WaterTurret")
+local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
 local MOD_PIX = WT.mod_root .. "graphics/"
 
 local mod_name = "\"Hardened pipes\""
@@ -23,28 +23,20 @@ if mods["hardened_pipes"] and WT.hardened_pipes then
     return nil
   end
 
-  local WT_recipe = data.raw.recipe[WT.water_turret_name]
-  local FE_recipe = data.raw.recipe[WT.extinguisher_turret_name]
+local WT_recipe = data.raw.recipe[WT.water_turret_name]
+local FE_recipe = data.raw.recipe[WT.extinguisher_turret_name]
 
 ------------------------------------------------------------------------------------
 -- Change recipe ingredients and results
   local results, pipes
 
-  local recipe_data_normal = FE_recipe and FE_recipe.normal
-  local recipe_data_expensive = FE_recipe and FE_recipe.expensive
-
-  for m, mode in pairs({"normal", "expensive", ""}) do
-    local ingredients = mode ~= "" and
-                        FE_recipe[mode] and FE_recipe[mode].ingredients or
-                        FE_recipe.ingredients
-    local pipes = mode ~= "" and
-                  find_pipes(WT_recipe[mode] and WT_recipe[mode].ingredients or {}) or
-                  find_pipes(WT_recipe.ingredients or {})
+  local ingredients = FE_recipe.ingredients
+    local pipes = find_pipes(WT_recipe.ingredients or {})
 
     -- Replace ingredients (Shouldn't be necessary, but perhaps other mods have
     -- changed something.)
     local replaced = false
-    for i, ingredient in pairs(ingredients) do
+    for i, ingredient in ipairs(ingredients) do
       if ingredient.name == "pipe" then
         ingredient.name = "PCHP-hardened-pipe"
         replaced = true
@@ -52,12 +44,10 @@ if mods["hardened_pipes"] and WT.hardened_pipes then
 --~ WT.dprint("ingredients in mode " .. mode .. ": " .. serpent.block(ingredients))
     end
 
-    local amount = mode ~= "" and WT_recipe[mode].ingredients[pipes].amount or
-                                    WT_recipe.ingredients[pipes].amount
+    local amount = WT_recipe.ingredients[pipes].amount
     -- Add hardened pipes otherwise
     if not replaced then
-      pipes = mode ~= "" and find_pipes(WT_recipe[mode].ingredients or {}) or
-                              find_pipes(WT_recipe.ingredients or {})
+      pipes = find_pipes(WT_recipe.ingredients or {})
       table.insert(ingredients, {
         type = "item",
         name = "PCHP-hardened-pipe",
@@ -69,40 +59,24 @@ if mods["hardened_pipes"] and WT.hardened_pipes then
     -- so as many pipes as went into the water turret should be returned with
     -- the fire extinguisher turret.
     -- Convert "result"/"result_count" to "results"
-    if mode ~= "" then
-      results = FE_recipe[mode].results or {{
-        type = "item",
-        name = FE_recipe[mode].result,
-        amount = FE_recipe[mode].result_count
-      }}
-    else
+    if FE_recipe.result then
       results = FE_recipe.results or {{
         type = "item",
         name = FE_recipe.result,
         amount = FE_recipe.result_count
       }}
+      else
+        results = FE_recipe.results or {{
+        type = "item",
+        name = WT.extinguisher_turret_name,
+        amount = 1
+      }}
     end
+      
 
 
     -- Add pipes to "results"
-    local x = mode ~= "" and find_pipes(FE_recipe[mode].results or {}) or
-                             find_pipes(FE_recipe.results or {})
-    if mode ~= "" then
-      if x then
-        FE_recipe[mode].results[x].amount = amount
-      else
-        FE_recipe[mode].results = FE_recipe[mode].results or results
-        table.insert(FE_recipe[mode].results, {
-          type = "item",
-          name = "pipe",
-          amount = amount
-        })
-      end
-      FE_recipe[mode].main_product = WT.extinguisher_turret_name
-      FE_recipe[mode].result = nil
-      FE_recipe[mode].result_count = nil
-
-    else
+    local x = find_pipes(FE_recipe.results or {})
       if x then
         FE_recipe.results[x].amount = amount
       else
@@ -114,16 +88,11 @@ if mods["hardened_pipes"] and WT.hardened_pipes then
         })
       end
       FE_recipe.main_product = WT.extinguisher_turret_name
-      FE_recipe.result = nil
-      FE_recipe.result_count = nil
     end
-  end
+
+
+local FE_recipe = data.raw.recipe[WT.extinguisher_turret_name]
   -- Remove obsolete recipe data from prototype root
-  FE_recipe.ingredients = FE_recipe.normal.ingredients
-  FE_recipe.main_product = FE_recipe.normal.main_product
-  FE_recipe.results = FE_recipe.normal.results
-  FE_recipe.result = nil
-  FE_recipe.result_count = nil
   data:extend({ FE_recipe })
   --~ WT.show("Recipe Fire extinguisher turret", data.raw.recipe[WT.extinguisher_turret_name])
   WT.dprint("%s %s has been found. Added hardened pipes to recipe of %s!",
@@ -137,13 +106,10 @@ if mods["hardened_pipes"] and WT.hardened_pipes then
 
   local layer
   for d, direction in ipairs({"north", "east", "south", "west"}) do
-    layer = data.raw[WT.turret_type][WT.extinguisher_turret_name].base_picture[direction].layers[1]
+  layer = data.raw[WT.turret_type][WT.extinguisher_turret_name].graphics_set.base_visualisation.animation[direction].layers[1]
 
-    layer.filename = MOD_PIX .. "turret-base-pipes-" .. direction .. ".png"
+    layer.filename = MOD_PIX .. "hr-turret-base-pipes-" .. direction .. ".png"
 
-    if layer.hr_version then
-        layer.hr_version.filename = MOD_PIX .. "hr-turret-base-pipes-" .. direction .. ".png"
-    end
   end
   WT.dprint("%s %s has been found. Exchanged graphics of %s!",
             {mod_name, mods["hardened_pipes"], WT.extinguisher_turret_name})
@@ -219,4 +185,4 @@ if mods["hardened_pipes"] and WT.hardened_pipes then
               {mod_name, mods["hardened_pipes"], WT.extinguisher_turret_name})
     end
   end
-end
+

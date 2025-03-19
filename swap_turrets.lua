@@ -26,8 +26,8 @@ WT.dprint("Entered function can_return(%s).", {WT.print_name_id(turret)})
 
 local errmsg
   turret = (type(turret) == "number" and
-              global.WT_turrets[turret] and
-              global.WT_turrets[turret].entity) or turret
+              storage.WT_turrets[turret] and
+              storage.WT_turrets[turret].entity) or turret
   --~ if not WT.is_WT_turret(turret) then
     --~ errmsg = string.format("%s is not a valid turret!", turret and turret.name or "nil")
   --~ end
@@ -200,11 +200,11 @@ swap_turrets.swap_turrets = function(id)
   --~ if (not id) or (type(id) ~= "number") then
     --~ error(string.format("%s is not a valid turret id!", id))
   --~ -- No turret stored with this ID
-  --~ elseif not global.WT_turrets[id] then
+  --~ elseif not storage.WT_turrets[id] then
     --~ error(string.format("No turret with id %s has been registered!", id))
   --~ -- Invalid turret
-  --~ elseif not global.WT_turrets[id].entity.valid then
-    --~ global.WT_turrets[id] = nil
+  --~ elseif not storage.WT_turrets[id].entity.valid then
+    --~ storage.WT_turrets[id] = nil
     --~ WT.dprint("Removed expired id %s from list of registered turrets.", {id})
     --~ return nil
   --~ end
@@ -212,11 +212,11 @@ swap_turrets.swap_turrets = function(id)
           --~ error(string.format("%s is not a valid turret id!", id))
   -- No turret stored with this ID
   if id then
-    if not global.WT_turrets[id] then
+    if not storage.WT_turrets[id] then
       error(string.format("No turret with id %s has been registered!", id))
     -- Invalid turret
-    elseif not global.WT_turrets[id].entity.valid then
-      global.WT_turrets[id] = nil
+    elseif not storage.WT_turrets[id].entity.valid then
+      storage.WT_turrets[id] = nil
       WT.dprint("Removed expired id %s from list of registered turrets.", {id})
       return nil
     end
@@ -227,9 +227,9 @@ swap_turrets.swap_turrets = function(id)
   ------------------------------------------------------------------------------------
 
 WT.dprint ("Looking for turret with id %s.", {id})
-WT.dprint("global.WT_turrets[%g]: %s", { id, global.WT_turrets[id] } )
+WT.dprint("storage.WT_turrets[%g]: %s", { id, storage.WT_turrets[id] } )
 
-  local turret = global.WT_turrets[id].entity
+  local turret = storage.WT_turrets[id].entity
   local new_turret = nil
 
   ------------------------------------------------------------------------------------
@@ -289,6 +289,7 @@ WT.dprint("global.WT_turrets[%g]: %s", { id, global.WT_turrets[id] } )
     ["target"] = turret.shooting_target,
     ["damage_dealt"] = turret.damage_dealt,
     ["kills"] = turret.kills,
+    ["quality"] = turret.quality
   }
   --~ WT.show("Stored properties of " .. WT.print_name_id(turret), properties)
   -- Remove old turret
@@ -300,30 +301,31 @@ WT.dprint("global.WT_turrets[%g]: %s", { id, global.WT_turrets[id] } )
     direction = properties.direction,
     force = properties.force,
     target = properties.shooting_target,
+    quality = properties.quality
   }
 
   if t then
     WT.show("Created", WT.print_name_id(t))
     -- Register new turret (new turrets will keep "tick" and area of the turret they replaced)
-    global.WT_turrets[t.unit_number] = {
+    storage.WT_turrets[t.unit_number] = {
       ["entity"] = t,
-      ["tick"] = global.WT_turrets[id].tick,
-      ["area"] = global.WT_turrets[id].area,
-      ["min_range"] = global.WT_turrets[id].min_range,
-      ["range"] = global.WT_turrets[id].range,
+      ["tick"] = storage.WT_turrets[id].tick,
+      ["area"] = storage.WT_turrets[id].area,
+      ["min_range"] = storage.WT_turrets[id].min_range,
+      ["range"] = storage.WT_turrets[id].range,
       ["id"] = t.unit_number,
     }
     -- Transfer damage dealt by this turret and number of kills to new turret
-    global.WT_turrets[t.unit_number].entity.damage_dealt = properties.damage_dealt
-    global.WT_turrets[t.unit_number].entity.kills = properties.kills
-WT.dprint("global.WT_turrets[%g].entity: %s",
-              { t.unit_number, global.WT_turrets[t.unit_number].entity })
-WT.dprint("New contents of %s. 1: %s\t2: %s", {WT.print_name_id(t), t.fluidbox and t.fluidbox[1] or "empty", t.fluidbox and t.fluidbox[2] or "empty"})
+    storage.WT_turrets[t.unit_number].entity.damage_dealt = properties.damage_dealt
+    storage.WT_turrets[t.unit_number].entity.kills = properties.kills
+WT.dprint("storage.WT_turrets[%g].entity: %s",
+              { t.unit_number, storage.WT_turrets[t.unit_number].entity })
+--WT.dprint("New contents of %s. 1: %s\t2: %s", {WT.print_name_id(t), t.fluidbox and t.fluidbox[1] or "empty", t.fluidbox and t.fluidbox[2] or "empty"})
   else
     error(string.format("Something bad happened: Couldn't create %s!", new_turret))
   end
 
-  turret = global.WT_turrets[t.unit_number].entity
+  turret = storage.WT_turrets[t.unit_number].entity
 
   --~ end
   WT.dprint("Contents of %s: %s", { WT.print_name_id(turret), turret.fluidbox } )
