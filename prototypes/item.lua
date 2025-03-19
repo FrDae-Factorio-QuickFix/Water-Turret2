@@ -13,11 +13,10 @@ wateritem.localised_description = {"entity-description.WT-water-turret"}
 wateritem.place_result = WT.water_turret_name
 --~ wateritem.icon = MOD_PIX .. "water-turret-icon.png"
 wateritem.icons = {
-  {icon = MOD_PIX .."turret-icon.png"},
-  {icon = MOD_PIX .. "turret-icon-raw.png", tint = WT.water_turret_tint}
+  {icon = MOD_PIX .."turret-icon.png", icon_size = 64},
+  { icon = MOD_PIX .. "turret-icon-raw.png", tint = WT.water_turret_tint, icon_size = 64 }
 }
-wateritem.icon_size = 64
---wateritem.icon_mipmaps = 0
+
 
 local extinguisheritem = util.table.deepcopy(data.raw["item"]["flamethrower-turret"])
 extinguisheritem.name = WT.extinguisher_turret_name
@@ -33,12 +32,12 @@ WT.dprint("Hardened pipes: %s\tlocalised name: %s", {WT.hardened_pipes, extingui
 extinguisheritem.place_result = WT.extinguisher_turret_name
 --~ extinguisheritem.icon = MOD_PIX .. "extinguisher-turret-icon.png"
 extinguisheritem.icons = {
-  {icon = "__base__/graphics/icons/flamethrower-turret.png"},
-  {icon = MOD_PIX .. "turret-icon-raw.png", tint = WT.extinguisher_turret_tint}
+  { icon = "__base__/graphics/icons/flamethrower-turret.png", icon_size = 64 },
+  {icon = MOD_PIX .. "turret-icon-raw.png", tint = WT.extinguisher_turret_tint, icon_size = 64}
 }
-extinguisheritem.icon_size = 64
-extinguisheritem.icon_mipmaps = 0
 
+
+---@diagnostic disable-next-line: assign-type-mismatch
 data:extend({ wateritem, extinguisheritem })
 
 

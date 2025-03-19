@@ -330,8 +330,8 @@ local waterentity = util.table.deepcopy(data.raw[WT.turret_type]["flamethrower-t
 waterentity.name = WT.water_turret_name
 --~ waterentity.icon = MOD_PIX .. "water-turret-icon.png"
 waterentity.icons = {
-  {icon = ICONS .."turret-icon.png"},
-  {icon = ICONS .. "turret-icon-raw.png", tint = WT.water_turret_tint}
+  {icon = ICONS .."turret-icon.png", icon_size = 64},
+  { icon = ICONS .. "turret-icon-raw.png", tint = WT.water_turret_tint, icon_size = 64 }
 }
 waterentity.icon_size = 64
 waterentity.icon_mipmaps = 0
@@ -592,7 +592,7 @@ extinguisherentity.localised_description = WT.hardened_pipes and
 WT.dprint("Hardened pipes: %s\tlocalised name: %s", {WT.hardened_pipes, extinguisherentity.localised_name})
 
 extinguisherentity.icons = {
-  {icon = ICONS .. "turret-icon.png", tint = WT.extinguisher_turret_tint}
+  { icon = ICONS .. "turret-icon.png", tint = WT.extinguisher_turret_tint, icon_size = 64 }
 }
 extinguisherentity.fluid_buffer_size = 200 * extinguisher_pressure_factor
 extinguisherentity.fluid_buffer_input_flow = extinguisherentity.fluid_buffer_size / 60 / 5 -- 5s to fill the buffer
