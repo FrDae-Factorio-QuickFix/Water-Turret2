@@ -28,9 +28,8 @@ local FE_recipe = data.raw.recipe[WT.extinguisher_turret_name]
 
 ------------------------------------------------------------------------------------
 -- Change recipe ingredients and results
-  local results, pipes
 
-  local ingredients = FE_recipe.ingredients
+  local ingredients = FE_recipe.ingredients or {}
     local pipes = find_pipes(WT_recipe.ingredients or {})
 
     -- Replace ingredients (Shouldn't be necessary, but perhaps other mods have
@@ -59,19 +58,12 @@ local FE_recipe = data.raw.recipe[WT.extinguisher_turret_name]
     -- so as many pipes as went into the water turret should be returned with
     -- the fire extinguisher turret.
     -- Convert "result"/"result_count" to "results"
-    if FE_recipe.result then
-      results = FE_recipe.results or {{
-        type = "item",
-        name = FE_recipe.result,
-        amount = FE_recipe.result_count
-      }}
-      else
-        results = FE_recipe.results or {{
+    
+      local results = FE_recipe.results or {{
         type = "item",
         name = WT.extinguisher_turret_name,
         amount = 1
       }}
-    end
       
 
 
@@ -88,11 +80,12 @@ local FE_recipe = data.raw.recipe[WT.extinguisher_turret_name]
         })
       end
       FE_recipe.main_product = WT.extinguisher_turret_name
-    end
+    
 
 
-local FE_recipe = data.raw.recipe[WT.extinguisher_turret_name]
+--local FE_recipe = data.raw.recipe[WT.extinguisher_turret_name]
   -- Remove obsolete recipe data from prototype root
+---@diagnostic disable-next-line: assign-type-mismatch
   data:extend({ FE_recipe })
   --~ WT.show("Recipe Fire extinguisher turret", data.raw.recipe[WT.extinguisher_turret_name])
   WT.dprint("%s %s has been found. Added hardened pipes to recipe of %s!",
@@ -185,4 +178,4 @@ local FE_recipe = data.raw.recipe[WT.extinguisher_turret_name]
               {mod_name, mods["hardened_pipes"], WT.extinguisher_turret_name})
     end
   end
-
+end
