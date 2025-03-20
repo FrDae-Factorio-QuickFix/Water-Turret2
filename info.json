@@ -7,7 +7,7 @@
   "contact": "Dae.anthony@gmail.com",
   "homepage": "https://github.com/FrDae-Factorio-QuickFix/Water-Turret2",
     
-  "version": "2.0.6",
+  "version": "2.0.7",
   "factorio_version": "2.0",
   "dependencies": [
                     "base >= 2.0",
