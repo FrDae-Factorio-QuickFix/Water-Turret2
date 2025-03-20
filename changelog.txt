@@ -7,7 +7,7 @@ Date: 2025-03-19
     - remove hardeness pipe to dependancie (recommendation only)
     - change color fluid
     - fix crash
-    - tweaed recipe icon sizes (needs testing)
+    - tweaked recipe icon sizes (needs testing)
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.5
 Date: 2025-03-19
