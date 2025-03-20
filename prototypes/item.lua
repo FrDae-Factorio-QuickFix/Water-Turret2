@@ -53,24 +53,24 @@ local extinguisherfluid = {
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-icon-turret-bg.png",
       icon_size = 128,
-      scale = 0.5
+      scale = 0.25
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-icon-turret.png",
       icon_size = 128,
       tint = WT.extinguisher_turret_tint,
-      scale = 0.5
+      scale = 0.25
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-icon-fluid-bg.png",
       icon_size = 128,
-      scale = 0.5
+      scale = 0.25
       --~ tint = WT.fire_ex_fluid_tint,
     },
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-icon-fluid.png",
       icon_size = 128,
-      scale = 0.5,
+      scale = 0.25,
       tint = WT.fire_ex_fluid_tint,
     },
   },
