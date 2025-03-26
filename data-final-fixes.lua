@@ -384,3 +384,29 @@ local turrets = data.raw[WT.turret_type]
 for t, turret in pairs({WT.water_turret_name, WT.steam_turret_name, WT.extinguisher_turret_name, WT.extinguisher_turret_water_name} ) do
 WT.show(turret .." resistances", turrets[turret].resistances)
 end
+
+
+
+local allturrets = data.raw["turret"]
+for name, dat in pairs(allturrets) do
+  if name ~= WT.water_turret_name and name ~= WT.steam_turret_name and name ~= WT.extinguisher_turret_name and name ~= WT.extinguisher_turret_water_name then
+    local im = {}
+    for _, d in pairs(dat.ignore_target_mask) do
+      im[d] = true
+    end
+    if not im[WT.trigger_target_mobile] then
+      table.insert(dat.ignore_target_mask, WT.trigger_target_mobile)
+    end
+    if not im[WT.trigger_target_acid_dummy] then
+      table.insert(WT.trigger_target_acid_dummy, WT.trigger_target_acid_dummy)
+    end
+    if not im[WT.trigger_target_fire_dummy] then
+      table.insert(WT.trigger_target_fire_dummy, WT.trigger_target_fire_dummy)
+    end
+    if not im[WT.trigger_target_ignore] then
+      table.insert(WT.trigger_target_ignore, WT.trigger_target_ignore)
+    end
+
+  end
+  
+end
