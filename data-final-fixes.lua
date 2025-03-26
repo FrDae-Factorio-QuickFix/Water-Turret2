@@ -398,13 +398,13 @@ for name, dat in pairs(allturrets) do
       table.insert(dat.ignore_target_mask, WT.trigger_target_mobile)
     end
     if not im[WT.trigger_target_acid_dummy] then
-      table.insert(WT.trigger_target_acid_dummy, WT.trigger_target_acid_dummy)
+      table.insert(dat.ignore_target_mask, WT.trigger_target_acid_dummy)
     end
     if not im[WT.trigger_target_fire_dummy] then
-      table.insert(WT.trigger_target_fire_dummy, WT.trigger_target_fire_dummy)
+      table.insert(dat.ignore_target_mask, WT.trigger_target_fire_dummy)
     end
     if not im[WT.trigger_target_ignore] then
-      table.insert(WT.trigger_target_ignore, WT.trigger_target_ignore)
+      table.insert(dat.ignore_target_mask, WT.trigger_target_ignore)
     end
 
   end
