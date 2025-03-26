@@ -50,7 +50,7 @@ local extinguisherfluid = {
   -- icon_size must be defined inside the icons or the icons generated for barrelling
   -- recipes won't be shown correctly!
   icons = {
-    {
+    --[[{
       icon = MOD_PIX .. "fluid/fire-ex-fluid-icon-turret-bg.png",
       icon_size = 128,
       scale = 0.25
@@ -60,7 +60,7 @@ local extinguisherfluid = {
       icon_size = 128,
       tint = WT.extinguisher_turret_tint,
       scale = 0.25
-    },
+    },--]]
     {
       icon = MOD_PIX .. "fluid/fire-ex-fluid-icon-fluid-bg.png",
       icon_size = 128,
