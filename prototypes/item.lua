@@ -1,5 +1,5 @@
 local WT = require('__WaterTurret-revived__/common')("WaterTurret-revived")
-
+require("util")
 local MOD_PIX = WT.mod_root .. "graphics/icons/"
 
 ------------------------------------------------------------------------------------
@@ -114,3 +114,7 @@ WT.show("flow_color", extinguisherfluid.flow_color)
 
   --~ extinguisherfluid.flow_color.a = 0.5
 data:extend({ extinguisherfluid })
+
+
+--extinguisherfluid.base_color = util.color("cd3e14")
+extinguisherfluid.base_color = util.color("A2000A") --#A2000AFF
