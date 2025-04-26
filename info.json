@@ -7,7 +7,7 @@
   "contact": "Dae.anthony@gmail.com",
   "homepage": "https://github.com/FrDae-Factorio-QuickFix/Water-Turret2",
     
-  "version": "2.0.10",
+  "version": "2.0.11",
   "factorio_version": "2.0",
   "dependencies": [
                     "base >= 2.0",
@@ -16,7 +16,6 @@
                     "(?) Rampant",
                     "? hardened_pipes",
                     "? lilys-incendiaries",
-                    "? Flammable_Oils_QUICKFIX",
                     "? gvv"
                   ]
 }
