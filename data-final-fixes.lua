@@ -410,3 +410,5 @@ for name, dat in pairs(allturrets) do
   end
   
 end
+
+data.raw.fluid[WT.fire_ex_fluid].base_color = WT.fire_ex_fluid_tint
