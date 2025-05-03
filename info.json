@@ -7,10 +7,10 @@
   "contact": "Dae.anthony@gmail.com",
   "homepage": "https://github.com/FrDae-Factorio-QuickFix/Water-Turret2",
     
-  "version": "2.0.11",
+  "version": "2.0.12",
   "factorio_version": "2.0",
   "dependencies": [
-                    "base >= 2.0",
+                    "base >= 2.0.46",
                     "? apm_power",
                     "(?) PickerDollies",
                     "(?) Rampant",
