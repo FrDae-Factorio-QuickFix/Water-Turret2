@@ -10,9 +10,9 @@ local BASE_PIX = "__base__/graphics/entity/flamethrower-turret/"
 
 -- 1, 1.5, 2, 2.5, 3
 local water_pressure_factor = WT.water_turret_pressure > 1 and
-                                      (1 + WT.water_turret_pressure / 2) or 1
+    (1 + WT.water_turret_pressure / 2) or 1
 local extinguisher_pressure_factor = WT.extinguisher_turret_pressure > 1 and
-                                      (1 + WT.extinguisher_turret_pressure / 2) or 1
+    (1 + WT.extinguisher_turret_pressure / 2) or 1
 
 ------------------------------------------------------------------------------------
 --                             Make new ammo category                             --
@@ -83,7 +83,7 @@ sticker.name = WT.slowdown_sticker_name
 sticker.target_movement_modifier = WT.slowdown_factor
 sticker.vehicle_speed_modifier = WT.slowdown_factor
 
-data:extend({sticker})
+data:extend({ sticker })
 
 
 ------------------------------------------------------------------------------------
@@ -110,7 +110,7 @@ WT_fire.initial_lifetime = WT_fire.maximum_lifetime
 WT_fire.burnt_patch_lifetime = 0
 WT_fire.on_fuel_added_action = nil
 
-data:extend({WT_fire})
+data:extend({ WT_fire })
 
 WT.show("WT_fire.burnt_patch_pictures", WT_fire.burnt_patch_pictures)
 ------------------------------------------------------------------------------------
@@ -125,18 +125,18 @@ local burnt_patch = {
   icon = "__base__/graphics/icons/small-scorchmark.png",
   --~ icon_size = 32,
   icon_size = 64,
-  flags = {"placeable-neutral", "not-on-map", "placeable-off-grid"},
-  collision_box = {{-1.5, -1.5}, {1.5, 1.5}},
+  flags = { "placeable-neutral", "not-on-map", "placeable-off-grid" },
+  collision_box = { { -1.5, -1.5 }, { 1.5, 1.5 } },
 
-  collision_mask = {layers = {doodad = true}, "not-colliding-with-itself"},
+  collision_mask = { layers = { doodad = true }, "not-colliding-with-itself" },
 
-  selection_box = {{-1, -1}, {1, 1}},
+  selection_box = { { -1, -1 }, { 1, 1 } },
   selectable_in_game = false,
   time_before_removed = 60 * 60 * 3, -- 3 minutes
   final_render_layer = "ground-patch-higher2",
   subgroup = "remnants",
-  order="d[remnants]-b[scorchmark]-a[small]",
-      --blend_mode="additive-soft",
+  order = "d[remnants]-b[scorchmark]-a[small]",
+  --blend_mode="additive-soft",
   animation = {
     width = 115,
     height = 56,
@@ -173,33 +173,33 @@ data:extend({ burnt_patch })
 ------------------------------------------------------------------------------------
 -- Fire dummy
 --~ local fire_dummy = {
-  --~ type = WT.dummy_type,
-  --~ name = WT.fire_dummy_name,
-  --~ picture = {
-    --~ -- filename = mods["_debug"] and MOD_PIX .. "red_dot.png" or MOD_PIX .. "blank.png",
-    --~ filename = (WT.debug_in_log or WT.debug_in_game) and
-                --~ MOD_PIX .. "red_dot.png" or MOD_PIX .. "blank.png",
-    --~ size = 64
-  --~ },
-  --~ healing_per_tick = 0,
-  --~ max_health = 2,
-  --~ -- Resistances will be added later in data-updates.lua, when we know about all
-  --~ -- defined damage-types!
-  --resistances = r,
-  --~ allow_copy_paste = false,
-  --~ collision_box = {{0, 0}, {0, 0}},
-  --~ flags = {
-    --~ "placeable-off-grid",
-    --~ "not-repairable",
-    --~ "not-on-map",
-    --~ "not-blueprintable",
-    --~ "not-deconstructable",
-    --~ "hidden",
-    --~ "not-flammable",
-    --~ "no-copy-paste",
-    --~ "not-selectable-in-game"
-  --~ },
-  --~ trigger_target_mask = { WT.trigger_target_fire_dummy }
+--~ type = WT.dummy_type,
+--~ name = WT.fire_dummy_name,
+--~ picture = {
+--~ -- filename = mods["_debug"] and MOD_PIX .. "red_dot.png" or MOD_PIX .. "blank.png",
+--~ filename = (WT.debug_in_log or WT.debug_in_game) and
+--~ MOD_PIX .. "red_dot.png" or MOD_PIX .. "blank.png",
+--~ size = 64
+--~ },
+--~ healing_per_tick = 0,
+--~ max_health = 2,
+--~ -- Resistances will be added later in data-updates.lua, when we know about all
+--~ -- defined damage-types!
+--resistances = r,
+--~ allow_copy_paste = false,
+--~ collision_box = {{0, 0}, {0, 0}},
+--~ flags = {
+--~ "placeable-off-grid",
+--~ "not-repairable",
+--~ "not-on-map",
+--~ "not-blueprintable",
+--~ "not-deconstructable",
+--~ "hidden",
+--~ "not-flammable",
+--~ "no-copy-paste",
+--~ "not-selectable-in-game"
+--~ },
+--~ trigger_target_mask = { WT.trigger_target_fire_dummy }
 --~ }
 local fire_dummy = util.table.deepcopy(data.raw[WT.dummy_type]["defender"])
 
@@ -208,23 +208,23 @@ fire_dummy.name = WT.fire_dummy_name
 fire_dummy.attack_parameters.ammo_type.action.action_delivery = nil
 fire_dummy.attack_parameters.range = 0
 fire_dummy.damaged_trigger_effect = {
-    damage_type_filters = {WT.water_damage_name, WT.fire_ex_damage_name},
-    type = "create-trivial-smoke",
-    smoke_name = "soft-fire-smoke",
-    color = {r = 0.75, g = 0.75, b = 0.75, a = 0.75}
+  damage_type_filters = { WT.water_damage_name, WT.fire_ex_damage_name },
+  type = "create-trivial-smoke",
+  smoke_name = "soft-fire-smoke",
+  color = { r = 0.75, g = 0.75, b = 0.75, a = 0.75 }
 }
 fire_dummy.destroy_action = nil
 fire_dummy.dying_explosion = nil
 fire_dummy.dying_trigger_effect = nil
 fire_dummy.flags = {
-    "placeable-off-grid",
-    "not-repairable",
-    "not-on-map",
-    "not-blueprintable",
-    "not-deconstructable",
-    "not-flammable",
-    "no-copy-paste",
-    "not-selectable-in-game"
+  "placeable-off-grid",
+  "not-repairable",
+  "not-on-map",
+  "not-blueprintable",
+  "not-deconstructable",
+  "not-flammable",
+  "no-copy-paste",
+  "not-selectable-in-game"
 }
 
 fire_dummy.hidden = true
@@ -246,18 +246,18 @@ fire_dummy.allow_copy_paste = false
 fire_dummy.create_ghost_on_death = false
 fire_dummy.alert_when_damaged = false
 -- Health bar will be invisible if selection_box is {{0,0},{0,0}}!
-fire_dummy.selection_box = {{0,0},{0,0}}
+fire_dummy.selection_box = { { 0, 0 }, { 0, 0 } }
 
 --~ WT.show("fire pictures", data.raw["fire"]["fire-flame"].pictures)
-for _, picture in ipairs({"idle", "shadow_idle", "in_motion", "shadow_in_motion"}) do
-    fire_dummy[picture] = {
-        frame_count = 1,
-        direction_count = 1,
-        filename = WT.debug_in_log  and MOD_PIX .. "/red_dot.png" or MOD_PIX .. "/blank.png",
-        size = 64,
-        mipmap_count = 1,
-    }
---~ -- WT.show(picture, fire_dummy[picture])
+for _, picture in ipairs({ "idle", "shadow_idle", "in_motion", "shadow_in_motion" }) do
+  fire_dummy[picture] = {
+    frame_count = 1,
+    direction_count = 1,
+    filename = WT.debug_in_log and MOD_PIX .. "/red_dot.png" or MOD_PIX .. "/blank.png",
+    size = 64,
+    mipmap_count = 1,
+  }
+  --~ -- WT.show(picture, fire_dummy[picture])
 end
 
 -- Create fake fire when dummy is placed
@@ -270,8 +270,8 @@ fire_dummy.created_effect = {
       entity_name = WT.fake_fire_name,
       --~ -- ignore_collision_condition = true,
       trigger_created_entity = false,
-      offset_deviation = { {0, 0}, {0, 0} },
-      offsets ={ {0, 0} }
+      offset_deviation = { { 0, 0 }, { 0, 0 } },
+      offsets = { { 0, 0 } }
     }
   }
 }
@@ -285,23 +285,24 @@ if WT.clean_acid_splashes then
   acid_dummy.name = WT.acid_dummy_name
   --~ table.insert(acid_dummy.trigger_target_mask, WT.trigger_target_mobile)
   acid_dummy.trigger_target_mask = { WT.trigger_target_acid_dummy }
-  acid_dummy.damaged_trigger_effect.damage_type_filters = {WT.water_damage_name, WT.fire_ex_damage_name, WT.steam_damage_name}
+  acid_dummy.damaged_trigger_effect.damage_type_filters = { WT.water_damage_name, WT.fire_ex_damage_name, WT
+      .steam_damage_name }
   acid_dummy.icon = WT.debug_in_log and MOD_PIX .. "/green_dot.png" or MOD_PIX .. "/blank.png"
-  for _, picture in ipairs({"idle", "shadow_idle", "in_motion", "shadow_in_motion"}) do
-      acid_dummy[picture] = {
-          frame_count = 1,
-          direction_count = 1,
-          filename = WT.debug_in_log and MOD_PIX .. "/green_dot.png" or MOD_PIX .. "/blank.png",
-          size = 64,
-          mipmap_count = 1,
-      }
+  for _, picture in ipairs({ "idle", "shadow_idle", "in_motion", "shadow_in_motion" }) do
+    acid_dummy[picture] = {
+      frame_count = 1,
+      direction_count = 1,
+      filename = WT.debug_in_log and MOD_PIX .. "/green_dot.png" or MOD_PIX .. "/blank.png",
+      size = 64,
+      mipmap_count = 1,
+    }
 
-  --~ WT.show(picture, fire_dummy[picture])
+    --~ WT.show(picture, fire_dummy[picture])
   end
   acid_dummy.created_effect = nil
 
   data:extend({ acid_dummy })
-WT.dprint("acid-dummy: %s", { data.raw[WT.dummy_type][WT.acid_dummy_name] })
+  WT.dprint("acid-dummy: %s", { data.raw[WT.dummy_type][WT.acid_dummy_name] })
 end
 
 
@@ -317,8 +318,8 @@ local waterentity_remnants = util.table.deepcopy(data.raw.corpse["flamethrower-t
 waterentity_remnants.name = WT.water_turret_name .. "-remnants"
 --~ waterentity_remnants.icon = MOD_PIX .. "water-turret-icon.png"
 waterentity_remnants.icons = {
-  {icon = ICONS .."turret-icon.png"},
-  {icon = ICONS .. "turret-icon-raw.png", tint = WT.water_turret_tint}
+  { icon = ICONS .. "turret-icon.png" },
+  { icon = ICONS .. "turret-icon-raw.png", tint = WT.water_turret_tint }
 }
 waterentity_remnants.icon_size = 64
 
@@ -330,13 +331,13 @@ local waterentity = util.table.deepcopy(data.raw[WT.turret_type]["flamethrower-t
 waterentity.name = WT.water_turret_name
 --~ waterentity.icon = MOD_PIX .. "water-turret-icon.png"
 waterentity.icons = {
-  {icon = ICONS .."turret-icon.png", icon_size = 64},
+  { icon = ICONS .. "turret-icon.png",     icon_size = 64 },
   { icon = ICONS .. "turret-icon-raw.png", tint = WT.water_turret_tint, icon_size = 64 }
 }
 waterentity.icon_size = 64
 waterentity.icon_mipmaps = 0
 waterentity.corpse = waterentity_remnants.name
-waterentity.minable = {mining_time = 0.5, result = WT.water_turret_name}
+waterentity.minable = { mining_time = 0.5, result = WT.water_turret_name }
 waterentity.max_health = 900
 --~ waterentity.fluid_buffer_size = 200
 waterentity.fluid_buffer_size = 200 * water_pressure_factor
@@ -345,16 +346,16 @@ waterentity.activation_buffer_ratio = 0.25
 waterentity.muzzle_animation = {
   filename = BASE_PIX .. "flamethrower-turret-muzzle-fire.png",
   line_length = 8,
-  width = 1, -- 17
+  width = 1,  -- 17
   height = 1, -- 41
   frame_count = 32,
   axially_symmetrical = false,
   direction_count = 1,
   blend_mode = "additive",
   scale = 0.5,
-  shift = {0.015625 * 0.5, -0.546875 * 0.5 + 0.05}
+  shift = { 0.015625 * 0.5, -0.546875 * 0.5 + 0.05 }
 }
-waterentity.muzzle_light = {intensity = 0.7, size = 3}
+waterentity.muzzle_light = { intensity = 0.7, size = 3 }
 waterentity.prepare_range = 60
 waterentity.shoot_in_prepare_state = false
 
@@ -368,19 +369,19 @@ waterentity.attack_parameters = {
   turn_range = 1.0 / 3.0,
   fire_penalty = 15,
   health_penalty = WT.health_factor,
-  lead_target_for_projectile_speed = 0.2* 0.75 * 1.5, -- this is same as particle horizontal speed of flamethrower fire stream
+  lead_target_for_projectile_speed = 0.2 * 0.75 * 1.5, -- this is same as particle horizontal speed of flamethrower fire stream
 
   fluids = {
-    {type = "water"},
+    { type = "water" },
     -- Moved over to new entity "steam-turret"
     --~ {type = "steam", damage_modifier = 5}
   },
   fluid_consumption = WT.water_turret_pressure,
   gun_center_shift = {
-    north = {0,-1.7},
-    east = {0.4,-1},
-    south = {0,-1},
-    west = {-0.4,-1.2}
+    north = { 0, -1.7 },
+    east = { 0.4, -1 },
+    south = { 0, -1 },
+    west = { -0.4, -1.2 }
   },
   gun_barrel_length = 0.4,
 
@@ -391,7 +392,7 @@ waterentity.attack_parameters = {
       action_delivery = {
         type = "stream",
         stream = "water-stream",
-        source_offset = {0.15, -0.5}
+        source_offset = { 0.15, -0.5 }
       }
     }
   },
@@ -416,7 +417,7 @@ waterentity.attack_parameters = {
     }
   }
 }
-data:extend({waterentity, waterentity_remnants})
+data:extend({ waterentity, waterentity_remnants })
 
 
 ------------------------------------------------------------------------------------
@@ -426,7 +427,7 @@ data:extend({waterentity, waterentity_remnants})
 --~ local steam_color ={r = 0.714, g = 0.769, b = 0.800, a = .5}
 --~ local fire_ex_color ={r = 0.774, g = 0.777, b = 0.313, a = .5}
 local f = data.raw.fluid
-local water_color = f["water"] and  f["water"].base_color
+local water_color = f["water"] and f["water"].base_color
 local steam_color = f["steam"] and f["steam"].base_color
 local fire_ex_color = WT.fire_ex_fluid_tint
 
@@ -434,13 +435,13 @@ local fire_ex_color = WT.fire_ex_fluid_tint
 WT.show("steam color", steam_color)
 local waterstream = util.table.deepcopy(data.raw["stream"]["flamethrower-fire-stream"])
 waterstream.name = "water-stream"
-waterstream.stream_light = {intensity = 0, size = 0}
-waterstream.ground_light = {intensity = 0, size = 0}
+waterstream.stream_light = { intensity = 0, size = 0 }
+waterstream.ground_light = { intensity = 0, size = 0 }
 waterstream.smoke_sources = {
   {
     name = "soft-fire-smoke",
-    frequency = 0, --0.25,
-    position = {0.0, 0}, -- -0.8},
+    frequency = 0,       --0.25,
+    position = { 0.0, 0 }, -- -0.8},
     starting_frame_deviation = 0
   }
 }
@@ -488,7 +489,7 @@ waterstream.spine_animation = {
   direction_count = 1,
   --~ animation_speed = 2,
   animation_speed = WT.water_turret_pressure,
-  shift = {0, 0}
+  shift = { 0, 0 }
 }
 waterstream.shadow = {
   filename = BASE_PIX .. "../acid-projectile/projectile-shadow.png",
@@ -497,7 +498,7 @@ waterstream.shadow = {
   height = 16,
   frame_count = 33,
   priority = "high",
-  shift = {-0.09, 0.395}
+  shift = { -0.09, 0.395 }
 }
 waterstream.particle = {
   --~ filename = MOD_PIX .. "water-turret-explosion-water.png",
@@ -509,7 +510,7 @@ waterstream.particle = {
   frame_count = 32,
   line_length = 8
 }
-data:extend({waterstream})
+data:extend({ waterstream })
 
 
 ------------------------------------------------------------------------------------
@@ -526,9 +527,9 @@ local steamstream = table.deepcopy(data.raw["stream"]["water-stream"])
 steamentity.name = WT.steam_turret_name
 --~ steamentity.localised_name = {"entity-name." .. WT.water_turret_name}
 --~ steamentity.localised_description = {"entity-description." .. WT.water_turret_name}
-steamentity.placeable_by = {item = WT.water_turret_name, count = 1}
+steamentity.placeable_by = { item = WT.water_turret_name, count = 1 }
 steamentity.attack_parameters.fluids = {
-    {type = "steam", damage_modifier = WT.steam_damage_modifier}
+  { type = "steam", damage_modifier = WT.steam_damage_modifier }
 }
 
 steamentity.attack_parameters.ammo_type = {
@@ -538,7 +539,7 @@ steamentity.attack_parameters.ammo_type = {
     action_delivery = {
       type = "stream",
       stream = "steam-stream",
-      source_offset = {0.15, -0.5}
+      source_offset = { 0.15, -0.5 }
     }
   }
 }
@@ -559,7 +560,7 @@ steamstream.action[1].action_delivery.target_effects[2] = {
   },
   apply_damage_to_trees = false
 }
-data:extend({steamentity, steamstream})
+data:extend({ steamentity, steamstream })
 
 
 ------------------------------------------------------------------------------------
@@ -574,8 +575,8 @@ local extinguisherentity_remnants = table.deepcopy(data.raw.corpse["flamethrower
 extinguisherentity_remnants.name = WT.extinguisher_turret_name .. "-remnants"
 --~ extinguisherentity_remnants.icon = MOD_PIX .. "extinguisher-turret-icon.png"
 extinguisherentity_remnants.icons = {
-  {icon = ICONS .. "turret-icon.png", tint = WT.extinguisher_turret_tint}
-  }
+  { icon = ICONS .. "turret-icon.png", tint = WT.extinguisher_turret_tint }
+}
 
 
 ------------------------------------------------------------------------------------
@@ -583,13 +584,13 @@ extinguisherentity_remnants.icons = {
 local extinguisherentity = table.deepcopy(data.raw[WT.turret_type][WT.water_turret_name])
 extinguisherentity.name = WT.extinguisher_turret_name
 extinguisherentity.localised_name = WT.hardened_pipes and
-  {"entity-name." .. WT.extinguisher_turret_name .. "-hardened"} or
-  {"entity-name." .. WT.extinguisher_turret_name}
+    { "entity-name." .. WT.extinguisher_turret_name .. "-hardened" } or
+    { "entity-name." .. WT.extinguisher_turret_name }
 extinguisherentity.localised_description = WT.hardened_pipes and
-  {"entity-description." .. WT.extinguisher_turret_name .. "-hardened"} or
-  {"entity-description." .. WT.extinguisher_turret_name}
+    { "entity-description." .. WT.extinguisher_turret_name .. "-hardened" } or
+    { "entity-description." .. WT.extinguisher_turret_name }
 --~ extinguisherentity.icon = MOD_PIX .. "extinguisher-turret-icon.png"
-WT.dprint("Hardened pipes: %s\tlocalised name: %s", {WT.hardened_pipes, extinguisherentity.localised_name})
+WT.dprint("Hardened pipes: %s\tlocalised name: %s", { WT.hardened_pipes, extinguisherentity.localised_name })
 
 extinguisherentity.icons = {
   { icon = ICONS .. "turret-icon.png", tint = WT.extinguisher_turret_tint, icon_size = 64 }
@@ -599,7 +600,7 @@ extinguisherentity.fluid_buffer_input_flow = extinguisherentity.fluid_buffer_siz
 
 
 extinguisherentity.corpse = extinguisherentity_remnants.name
-extinguisherentity.placeable_by = {item = WT.extinguisher_turret_name, count = 1}
+extinguisherentity.placeable_by = { item = WT.extinguisher_turret_name, count = 1 }
 extinguisherentity.minable.result = WT.extinguisher_turret_name
 extinguisherentity.attack_parameters.fluids = {
   {
@@ -621,7 +622,7 @@ extinguisherentity.attack_parameters.ammo_type = {
     action_delivery = {
       type = "stream",
       stream = "extinguisher-stream",
-      source_offset = {0.15, -0.5}
+      source_offset = { 0.15, -0.5 }
     },
   },
   target_type = "entity"
@@ -656,7 +657,7 @@ extinguisherstream.action[1].action_delivery.target_effects[2] = {
   },
   apply_damage_to_trees = false
 }
-data:extend({extinguisherentity, extinguisherentity_remnants, extinguisherstream})
+data:extend({ extinguisherentity, extinguisherentity_remnants, extinguisherstream })
 
 
 ------------------------------------------------------------------------------------
@@ -678,7 +679,7 @@ local extinguisherwaterstream = table.deepcopy(data.raw["stream"]["extinguisher-
 extinguisherwaterstream.name = "extinguisherwater-stream"
 extinguisherwaterstream.spine_animation.tint = water_color
 extinguisherwaterstream.particle.tint = water_color
-data:extend({extinguisherwaterentity, extinguisherwaterstream})
+data:extend({ extinguisherwaterentity, extinguisherwaterstream })
 
 
 ------------------------------------------------------------------------------------
@@ -690,7 +691,6 @@ data:extend({extinguisherwaterentity, extinguisherwaterstream})
 -- Color remnants
 
 local function color_remnants(entity, tint)
-
   local layer = table.deepcopy(data.raw.corpse["flamethrower-turret-remnants"].animation.layers[1])
 
   layer.filename = MOD_PIX .. "hr-turret-gun-remnants-raw.png"
@@ -698,18 +698,41 @@ local function color_remnants(entity, tint)
 
 
 
-  table.insert(entity.animation.layers, 2, layer)--]]--[[
+  table.insert(entity.animation.layers, 2, layer) --]]--[[
 end
 --~ log("WT.water_turret_tint: " .. serpent.block(WT.water_turret_tint))
 color_remnants(data.raw.corpse[WT.water_turret_name .. "-remnants"], WT.water_turret_tint)
 color_remnants(data.raw.corpse[WT.extinguisher_turret_name .. "-remnants"], WT.extinguisher_turret_tint)
 
 
-local function color_layer(layers, image, tint)
+local function color_layer(layers, image, tint, dir)
   local new_layer = table.deepcopy(layers[1])
   new_layer.filename = MOD_PIX .. image
   new_layer.tint = tint
   new_layer.apply_runtime_tint = false
+--[[
+  if string.find(dir, "^w") then
+    new_layer.width = 208
+    new_layer.height = 144
+    new_layer.shift = util.by_pixel(-7, -5 + (160 - 144) / 2.0)
+  end
+  if string.find(dir, "^n") then
+    new_layer.width = 156
+    new_layer.height = 196
+    new_layer.shift = util.by_pixel(0, 13)
+  end
+  if string.find(dir, "^e") then
+    new_layer.width = 216
+    new_layer.height = 146
+    new_layer.shift = util.by_pixel(-6, -2.75 + (169 - 146) / 2.0)
+  end
+  if string.find(dir, "^s") then
+    new_layer.width = 128
+    new_layer.height = 166
+    new_layer.shift = util.by_pixel(0, -8)
+  end
+--]]
+
   table.insert(layers, 2, new_layer)
 end
 
@@ -720,10 +743,9 @@ end
 
 
 local function color_base(turret, tint)
-
-  for d, direction in ipairs({"north", "east", "south", "west"}) do
+  for d, direction in ipairs({ "north", "east", "south", "west" }) do
     color_layer(turret.graphics_set.base_visualisation.animation[direction].layers,
-                  "hr-turret-base-" .. direction .. "-raw.png", tint)
+      "hr-turret-base-" .. direction .. "-raw.png", tint, direction)
   end
 end
 
@@ -732,12 +754,12 @@ color_base(data.raw[WT.turret_type][WT.steam_turret_name], WT.water_turret_tint)
 color_base(data.raw[WT.turret_type][WT.extinguisher_turret_name], WT.extinguisher_turret_tint)
 color_base(data.raw[WT.turret_type][WT.extinguisher_turret_water_name], WT.extinguisher_turret_tint)
 --~ WT.exchange_images({ "north", "east", "south", "west" },
-                    --~ "extinguisher-turret-base-%NAME%.png",
-                    --~ data.raw[WT.turret_type][WT.extinguisher_turret_name].base_picture)
+--~ "extinguisher-turret-base-%NAME%.png",
+--~ data.raw[WT.turret_type][WT.extinguisher_turret_name].base_picture)
 
 
 ------------------------------------------------------------------------------------
--- Color rotatable gun 
+-- Color rotatable gun
 
 
 local function color_gun(turret, tint)
@@ -745,10 +767,9 @@ local function color_gun(turret, tint)
     layer.filename = MOD_PIX .. image
     layer.tint = tint
     layer.apply_runtime_tint = false
-
   end
 
-  for d, direction in ipairs({"north", "east", "south", "west"}) do
+  for d, direction in ipairs({ "north", "east", "south", "west" }) do
     for a, animation in ipairs({
       "folded_animation", "preparing_animation", "folding_animation",
     }) do
@@ -767,4 +788,3 @@ color_gun(data.raw[WT.turret_type][WT.water_turret_name], WT.water_turret_tint)
 color_gun(data.raw[WT.turret_type][WT.steam_turret_name], WT.water_turret_tint)
 color_gun(data.raw[WT.turret_type][WT.extinguisher_turret_name], WT.extinguisher_turret_tint)
 color_gun(data.raw[WT.turret_type][WT.extinguisher_turret_water_name], WT.extinguisher_turret_tint)
-
